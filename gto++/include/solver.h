@@ -1,9 +1,12 @@
 #pragma once
 
-class Solver {
-private:
-public:
-  void solve();
+#include "info_set.h"
+#include "range.h"
 
-  // Range get_strategy(Node u);
+class Solver {
+  private:
+  public:
+    void solve();
+
+    const Range GetStrategy(GameState state) const;
 };
