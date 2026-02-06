@@ -1,9 +1,9 @@
 #pragma once
 
 #include <vector>
-#include "action.h"
-#include "action_abstraction.h"
-#include "game_state.h"
+#include "action/action.h"
+#include "action/action_abstraction.h"
+#include "game/game_state.h"
 
 /*
  * A PerStreetAbstraction has 3 separate ActionAbstractions for each postflop

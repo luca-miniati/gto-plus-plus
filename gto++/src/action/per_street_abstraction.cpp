@@ -1,7 +1,7 @@
-#include "action_abstraction/per_street_abstraction.h"
+#include "action/per_street_abstraction.h"
 
 std::vector<Action> PerStreetAbstraction::GetActions(const GameState& state) const {
-  switch (state.GetStreet()) {
+  switch (state.street) {
     case Street::Preflop:
       return {};
     case Street::Flop:

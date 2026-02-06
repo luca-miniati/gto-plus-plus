@@ -8,13 +8,13 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_executable(test_action test_action.cpp)
-add_executable(test_action_abstraction test_action_abstraction.cpp)
+add_executable(test_action action/test_action.cpp)
+add_executable(test_game_state game/test_game_state.cpp)
 target_link_libraries(test_action PRIVATE gto++ gtest_main)
-target_link_libraries(test_action_abstraction PRIVATE gto++ gtest_main)
+target_link_libraries(test_game_state PRIVATE gto++ gtest_main)
 target_include_directories(test_action PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
-target_include_directories(test_action_abstraction PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+target_include_directories(test_game_state PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
 include(GoogleTest)
 gtest_discover_tests(test_action)
-gtest_discover_tests(test_action_abstraction)
+gtest_discover_tests(test_game_state)
