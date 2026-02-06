@@ -1,16 +1,19 @@
+#include <stdexcept>
 #include "game/game_state.h"
 #include "utils/utils.h"
 
-GameState GameState::InitialState() {
+GameState GameState::InitialState(int pot, std::vector<int> starting_stacks) {
+  if (!(pot > 0 && pot % 2 == 0))
+    throw std::runtime_error("initial pot size must be an even positive integer");
+
   return {
-    /*current_player      =*/ 1,
+    /*current_player      =*/ 0,
     /*current_raises      =*/ 0,
-    /*pot                 =*/ 3,
-    /*street              =*/ Street::Preflop,
+    /*pot                 =*/ pot,
+    /*street              =*/ Street::Flop,
     /*community_cards     =*/ {},
-    /*blinds_or_straddles =*/ {2, 1},
-    /*starting_stacks     =*/ {100, 100},
-    /*current_stacks      =*/ {98, 99},
+    /*starting_stacks     =*/ starting_stacks,
+    /*current_stacks      =*/ {starting_stacks[0] - pot / 2, starting_stacks[1] - pot / 2},
     /*current_bets        =*/ {0, 0},
     /*history             =*/ {}
   };
@@ -22,7 +25,6 @@ bool GameState::operator==(const GameState& other) const {
     this->pot                 == other.pot &&
     this->street              == other.street &&
     this->community_cards     == other.community_cards &&
-    this->blinds_or_straddles == other.blinds_or_straddles &&
     this->starting_stacks     == other.starting_stacks &&
     this->current_stacks      == other.current_stacks &&
     this->current_bets        == other.current_bets &&
@@ -38,8 +40,6 @@ std::size_t std::hash<GameState>::operator()(const GameState& s) const {
   hash_combine(seed, hasher(static_cast<int>(s.street)));
   for (Card c : s.community_cards)
     hash_combine(seed, hasher(int(c)));
-  for (int x : s.blinds_or_straddles)
-    hash_combine(seed, hasher(x));
   for (int x : s.starting_stacks)
     hash_combine(seed, hasher(x));
   for (int x : s.current_stacks)

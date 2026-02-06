@@ -11,6 +11,7 @@ add_library(gto++
     src/action/fixed_abstraction.cpp
     src/action/per_street_abstraction.cpp
     src/game/game_state.cpp
+    src/game/game_model.cpp
     src/solver/range.cpp
     src/solver/solver.cpp
     src/tree/info_set.cpp
