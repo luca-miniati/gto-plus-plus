@@ -14,7 +14,7 @@ enum class ActionType { Bet, Call, Check, Fold, Raise };
  * have 4 chips in front of them.
  */
 struct Action {
-  const ActionType type;
+  ActionType type;
   int amount = -1;
   bool operator==(const Action& other) const;
 };
