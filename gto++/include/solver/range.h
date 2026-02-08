@@ -1,5 +1,4 @@
 #pragma once
-
 #include <vector>
 #include "action/action.h"
 #include "phevaluator/card.h"

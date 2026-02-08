@@ -1,5 +1,4 @@
 #pragma once
-
 #include <functional>
 
 enum class ActionType { Bet, Call, Check, Fold, Raise };

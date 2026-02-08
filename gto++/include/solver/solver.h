@@ -1,7 +1,7 @@
 #pragma once
-
-#include "info_set.h"
-#include "range.h"
+#include "game/game_state.h"
+#include "solver/range.h"
+#include "tree/info_set.h"
 
 class Solver {
   private:

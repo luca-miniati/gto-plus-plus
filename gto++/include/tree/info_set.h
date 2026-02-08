@@ -1,5 +1,4 @@
 #pragma once
-
 #include "game/game_state.h"
 #include "phevaluator/phevaluator.h"
 using Card = phevaluator::Card;
