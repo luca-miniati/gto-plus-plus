@@ -1,5 +1,5 @@
 #include "utils/utils.h"
-#include "tree/info_set.h"
+#include "info_set/info_set.h"
 #include "game/game_state.h"
 
 bool InfoSet::operator==(const InfoSet& other) const {

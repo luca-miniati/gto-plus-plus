@@ -2,7 +2,7 @@
 #include "game/game_state.h"
 #include "solver/range.h"
 #include "tree/tree.h"
-#include "tree/info_set.h"
+#include "info_set/info_set.h"
 
 class Solver {
   private:

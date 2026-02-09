@@ -2,7 +2,7 @@
 #include <unordered_map>
 #include "solver/range.h"
 #include "action/action_abstraction.h"
-#include "tree/info_set.h"
+#include "info_set/info_set.h"
 #include "tree/node.h"
 
 class Tree {

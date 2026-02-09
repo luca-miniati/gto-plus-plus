@@ -14,7 +14,7 @@ add_library(gto++
     src/game/game_model.cpp
     src/solver/range.cpp
     src/solver/solver.cpp
-    src/tree/info_set.cpp
+    src/info_set/info_set.cpp
     src/tree/node.cpp
     src/tree/tree.cpp
     src/utils/utils.cpp
