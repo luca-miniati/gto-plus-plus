@@ -15,6 +15,8 @@ add_library(gto++
     src/solver/range.cpp
     src/solver/solver.cpp
     src/tree/info_set.cpp
+    src/tree/node.cpp
+    src/tree/tree.cpp
     src/utils/utils.cpp
 )
 target_include_directories(gto++ PUBLIC

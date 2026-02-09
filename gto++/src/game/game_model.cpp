@@ -4,7 +4,7 @@
 #include "game/game_model.h"
 #include "game/game_state.h"
 
-bool GameModel::IsLegal(const GameState &state, const Action &action) {
+bool GameModel::IsLegal(const GameState &state, const Action &action, int max_raises) {
   int actor = state.current_player;
   // WLOG, it's p0 to move. Cursed? Yes
   int b0 = state.current_bets[actor];
@@ -46,6 +46,9 @@ bool GameModel::IsLegal(const GameState &state, const Action &action) {
       break;
 
     case ActionType::Raise:
+      if (state.current_raises >= max_raises)
+        return false;
+
       if (b0 == b1)
         return false;
 
@@ -72,9 +75,6 @@ GameState GameModel::Step(const GameState &state, const Action &action) {
   if (state.is_terminal)
     throw std::runtime_error("can't call Step on terminal game state");
 
-  if (!IsLegal(state, action))
-    throw std::runtime_error("illegal action");
-
   int actor = state.current_player;
   int opponent = actor ^ 1;
   int b0 = state.current_bets[actor];
@@ -83,9 +83,6 @@ GameState GameModel::Step(const GameState &state, const Action &action) {
   int s1 = state.current_stacks[actor ^ 1];
   int effective_stack = std::min(s0, s1);
 
-  GameState next_state;
-  auto next_deck            = state.deck;
-  auto next_community_cards = state.community_cards;
   auto next_stacks          = state.current_stacks;
   auto next_bets            = state.current_bets;
   auto next_history         = state.history;
@@ -98,19 +95,17 @@ GameState GameModel::Step(const GameState &state, const Action &action) {
         // Actor places a bet
         next_stacks[actor] -= action.amount;
         next_bets[actor] = action.amount;
-        next_state = GameState{
+        return GameState{
             /*is_terminal         =*/ false,
             /*current_player      =*/ opponent,
             /*current_raises      =*/ 1,
             /*pot                 =*/ next_pot,
             /*street              =*/ state.street,
-            /*deck                =*/ next_deck,
-            /*community_cards     =*/ next_community_cards,
+            /*community_cards     =*/ state.community_cards,
             /*current_stacks      =*/ next_stacks,
             /*current_bets        =*/ next_bets,
             /*history             =*/ next_history
         };
-        break;
       }
     case ActionType::Call:
       {
@@ -124,28 +119,23 @@ GameState GameModel::Step(const GameState &state, const Action &action) {
 
         bool is_river = state.street == Street::River;
 
-        // If not river, deal next card
-        if (!is_river)
-          next_community_cards.push_back(next_deck.Pop());
-
-        next_state = GameState{
+        return GameState{
             /*is_terminal         =*/ is_river,
             /*current_player      =*/ opponent,
             /*current_raises      =*/ 0,
             /*pot                 =*/ next_pot,
             /*street              =*/ is_river ? state.street : NextStreet(state.street),
-            /*deck                =*/ next_deck,
-            /*community_cards     =*/ next_community_cards,
+            /*community_cards     =*/ state.community_cards,
             /*current_stacks      =*/ next_stacks,
             /*current_bets        =*/ next_bets,
             /*history             =*/ next_history
         };
-        break;
       }
     case ActionType::Check:
       {
         // Check - action passes to opponent or street advances
-        bool opponent_has_checked = (state.history.size() > 0 && 
+        bool opponent_has_checked = (actor == 1 &&
+            state.history.size() > 0 && 
             state.history.back().type == ActionType::Check);
 
         if (opponent_has_checked) {
@@ -153,55 +143,46 @@ GameState GameModel::Step(const GameState &state, const Action &action) {
           next_bets.assign(2, 0);
           bool is_river = state.street == Street::River;
 
-          // If not river, deal next card
-          if (!is_river)
-            next_community_cards.push_back(next_deck.Pop());
-
-          next_state = GameState{
+          return GameState{
               /*is_terminal         =*/ is_river,
               /*current_player      =*/ opponent,
               /*current_raises      =*/ 0,
               /*pot                 =*/ next_pot,
               /*street              =*/ is_river ? state.street : NextStreet(state.street),
-              /*deck                =*/ next_deck,
-              /*community_cards     =*/ next_community_cards,
+              /*community_cards     =*/ state.community_cards,
               /*current_stacks      =*/ next_stacks,
               /*current_bets        =*/ next_bets,
               /*history             =*/ next_history
           };
         } else {
           // First check, pass to opponent
-          next_state = GameState{
+          return GameState{
               /*is_terminal         =*/ false,
               /*current_player      =*/ opponent,
-              /*current_raises      =*/ state.current_raises,
+              /*current_raises      =*/ 0,
               /*pot                 =*/ next_pot,
               /*street              =*/ state.street,
-              /*deck                =*/ next_deck,
-              /*community_cards     =*/ next_community_cards,
+              /*community_cards     =*/ state.community_cards,
               /*current_stacks      =*/ next_stacks,
               /*current_bets        =*/ next_bets,
               /*history             =*/ next_history
           };
         }
-        break;
       }
     case ActionType::Fold:
       {
         // Player folds, game is terminal
-        next_state = GameState{
+        return GameState{
             /*is_terminal         =*/ true,
             /*current_player      =*/ actor,
             /*current_raises      =*/ state.current_raises,
             /*pot                 =*/ next_pot,
             /*street              =*/ state.street,
-            /*deck                =*/ next_deck,
-            /*community_cards     =*/ next_community_cards,
+            /*community_cards     =*/ state.community_cards,
             /*current_stacks      =*/ next_stacks,
             /*current_bets        =*/ next_bets,
             /*history             =*/ next_history
         };
-        break;
       }
     case ActionType::Raise:
       {
@@ -209,21 +190,19 @@ GameState GameModel::Step(const GameState &state, const Action &action) {
         next_stacks[actor] -= raise_difference;
         next_bets[actor] = action.amount;
 
-        next_state = GameState{
+        return GameState{
             /*is_terminal         =*/ false,
             /*current_player      =*/ opponent,
             /*current_raises      =*/ state.current_raises + 1,
             /*pot                 =*/ next_pot,
             /*street              =*/ state.street,
-            /*deck                =*/ next_deck,
-            /*community_cards     =*/ next_community_cards,
+            /*community_cards     =*/ state.community_cards,
             /*current_stacks      =*/ next_stacks,
             /*current_bets        =*/ next_bets,
             /*history             =*/ next_history
         };
-        break;
       }
+    default:
+      throw std::runtime_error("invalid ActionType");
   }
-
-  return next_state;
 }
