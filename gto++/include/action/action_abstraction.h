@@ -1,5 +1,4 @@
 #pragma once
-
 #include <vector>
 
 class Action;
@@ -10,11 +9,11 @@ class GameState;
  * current player can take.
  */
 class ActionAbstraction {
-public:
-  virtual ~ActionAbstraction() = default;
+  public:
+    virtual ~ActionAbstraction() = default;
 
-  /*
-   * Return a vector of Actions that the current player can take.
-   */
-  virtual std::vector<Action> GetActions(const GameState& state) const = 0;
+    /*
+     * Return a vector of Actions that the current player can take.
+     */
+    virtual std::vector<Action> GetActions(const GameState& state) const = 0;
 };
