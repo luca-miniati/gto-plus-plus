@@ -7,16 +7,13 @@
 Deck::Deck() {
   this->deck_.resize(52);
 
-  const std::string suits = "cdhs";
-  const std::string ranks = "23456789TJQKA";
-
-  int n = suits.size();
-  int m = ranks.size();
+  int n = SUITS.size();
+  int m = RANKS.size();
   for (int i = 0; i < n; ++i)
     for (int j = 0; j < m; ++j)
       this->deck_[i * m + j] = Card(
-          std::string(1, ranks[j]) +
-          std::string(1, suits[i])
+          std::string(1, RANKS[j]) +
+          std::string(1, SUITS[i])
          );
 }
 

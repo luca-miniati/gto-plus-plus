@@ -8,6 +8,8 @@
  */
 class GameModel {
   public:
-    static bool IsLegal(const GameState &state, const Action &action, int max_raises); 
-    static GameState Step(const GameState &state, const Action &action);
+    static bool IsLegal(const GameState &state, const Action &action,
+        int max_raises); 
+    static GameState Step(const GameState &state, const Action &action,
+        const int action_idx);
 };

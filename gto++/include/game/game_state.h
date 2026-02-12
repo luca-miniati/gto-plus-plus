@@ -30,7 +30,7 @@ struct GameState {
   std::vector<Card> community_cards;
   std::vector<int> current_stacks;
   std::vector<int> current_bets;
-  std::vector<Action> history;
+  std::vector<int> history;  // store action indices
   bool operator==(const GameState& other) const;
   bool IsChanceNode() const;
   static GameState InitialState(int pot, std::vector<int> starting_stacks, std::vector<Card> flop);

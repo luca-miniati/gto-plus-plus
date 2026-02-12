@@ -1,17 +1,13 @@
 #include "tree/node.h"
 
-Node::Node(NodeKey key, int num_actions, std::vector<NodePtr> children,
+Node::Node(NodeIdx idx, int num_actions, std::vector<NodeIdx> children,
     bool is_chance_node, bool is_terminal)
-  : key_(key),
+  : idx_(idx),
     num_actions_(num_actions),
     children_(children),
     is_chance_node_(is_chance_node),
     is_terminal_(is_terminal)
 {}
-
-NodeKey Node::GetKey() {
-  return this->key_;
-}
 
 bool Node::IsTerminal() {
   return this->is_terminal_;
@@ -29,10 +25,10 @@ int Node::GetNumActions() {
   return this->num_actions_;
 }
 
-std::vector<NodePtr> Node::GetChildren() {
+std::vector<NodeIdx> Node::GetChildren() {
   return this->children_;
 }
 
-NodePtr Node::GetChild(int action_idx) {
+NodeIdx Node::GetChild(int action_idx) {
   return this->children_[action_idx];
 }

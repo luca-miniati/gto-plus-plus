@@ -43,8 +43,8 @@ std::size_t std::hash<GameState>::operator()(const GameState& s) const {
     hash_combine(seed, hasher(x));
   for (int x : s.current_bets)
     hash_combine(seed, hasher(x));
-  for (Action a : s.history)
-    hash_combine(seed, std::hash<Action>{}(a));
+  for (int x : s.history)
+    hash_combine(seed, hasher(x));
   return seed;
 }
 

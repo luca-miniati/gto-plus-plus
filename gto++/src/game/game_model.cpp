@@ -19,7 +19,10 @@ bool GameModel::IsLegal(const GameState &state, const Action &action, int max_ra
       if (b0 != 0 || b1 != 0)
         return false;  // bet is only legal if there's not already a bet
 
-      if (action.amount < 2 || action.amount > effective_stack)  // min bet is 2 chips (1bb)
+      if (action.amount < 2)
+        throw std::runtime_error("GameModel.Step: invalid action: betting < 1bb");
+
+      if (action.amount > effective_stack)  // min bet is 2 chips (1bb)
         return false;
 
       break;
@@ -71,7 +74,8 @@ bool GameModel::IsLegal(const GameState &state, const Action &action, int max_ra
   return true;
 }
 
-GameState GameModel::Step(const GameState &state, const Action &action) {
+GameState GameModel::Step(const GameState &state, const Action &action,
+    const int action_idx) {
   if (state.is_terminal)
     throw std::runtime_error("can't call Step on terminal game state");
 
@@ -86,7 +90,7 @@ GameState GameModel::Step(const GameState &state, const Action &action) {
   auto next_stacks          = state.current_stacks;
   auto next_bets            = state.current_bets;
   auto next_history         = state.history;
-  next_history.push_back(action);
+  next_history.push_back(action_idx);
   int next_pot = state.pot;
 
   switch (action.type) {
@@ -134,9 +138,8 @@ GameState GameModel::Step(const GameState &state, const Action &action) {
     case ActionType::Check:
       {
         // Check - action passes to opponent or street advances
-        bool opponent_has_checked = (actor == 1 &&
-            state.history.size() > 0 && 
-            state.history.back().type == ActionType::Check);
+        bool opponent_has_checked = (actor == 1 && state.history.size() > 0 && 
+            b0 == 0 && b1 == 0);
 
         if (opponent_has_checked) {
           // Both players checked, advance street

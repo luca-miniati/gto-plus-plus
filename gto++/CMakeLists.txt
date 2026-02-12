@@ -15,6 +15,7 @@ add_library(gto++
     src/solver/range.cpp
     src/solver/solver.cpp
     src/info_set/info_set.cpp
+    src/info_set/info_set_abstraction.cpp
     src/tree/node.cpp
     src/tree/tree.cpp
     src/utils/utils.cpp

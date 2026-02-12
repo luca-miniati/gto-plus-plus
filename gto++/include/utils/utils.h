@@ -4,6 +4,9 @@
 #include "phevaluator/phevaluator.h"
 using Card = phevaluator::Card;
 
+constexpr std::string SUITS = "cdhs";
+constexpr std::string RANKS = "23456789TJQKA";
+
 inline void hash_combine(std::size_t& seed, std::size_t value) {
     seed ^= value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }

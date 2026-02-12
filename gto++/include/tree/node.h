@@ -5,25 +5,25 @@
 #include "game/game_state.h"
 class Node;
 using NodePtr = std::shared_ptr<Node>;
-using NodeKey = std::size_t;
+using NodeKey = __uint128_t;
+using NodeIdx = std::size_t;
 
 class Node {
   private:
     bool is_terminal_;
     bool is_chance_node_;
     int num_actions_;
-    NodeKey key_;
-    std::vector<NodePtr> children_;
+    NodeIdx idx_;
+    std::vector<NodeIdx> children_;
   public:
-    Node(NodeKey key, int num_actions, std::vector<NodePtr> children,
+    Node(NodeIdx idx, int num_actions, std::vector<NodeIdx> children,
         bool is_chance_node, bool is_terminal);
-    NodeKey GetKey();
     bool IsTerminal();
     bool IsChanceNode();
     double GetUtility(Deck deck);
     std::vector<double> GetStrategy(double reach_p);
     void UpdateRegret(int action_idx, double value);
     int GetNumActions();
-    std::vector<NodePtr> GetChildren();
-    NodePtr GetChild(int action_idx);
+    std::vector<NodeIdx> GetChildren();
+    NodeIdx GetChild(int action_idx);
 };
