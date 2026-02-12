@@ -47,10 +47,11 @@ NodeIdx Tree::CreateNode(InfoSet i, std::vector<NodeIdx> children) {
   return idx;
 }
 
-NodeIdx Tree::GetNodeIdx(InfoSet i) {
+NodeIdx Tree::GetOrCreateNodeIdx(InfoSet i) {
   NodeKey key = this->info_set_abst_->GetKey(i);
-  NodeIdx idx = this->idx_[key];
-  return idx;
+  if (this->idx_.contains(key))
+    return this->idx_[key];
+  return this->BuildSubtree(i);
 }
 
 NodeIdx Tree::BuildSubtree(InfoSet i) {

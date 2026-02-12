@@ -30,5 +30,5 @@ class Tree {
     void SetFlop(std::vector<Card> flop);
     void Reset();
     void Build();
-    NodeIdx GetNodeIdx(InfoSet i);
+    NodeIdx GetOrCreateNodeIdx(InfoSet i);
 };
