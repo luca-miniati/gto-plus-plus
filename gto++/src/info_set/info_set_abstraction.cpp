@@ -13,7 +13,7 @@ void EncodeHoleCards(uint8_t &hole_cards, int rank1, int rank2) {
  * Return a 20-bit representation of community cards.
  * Flop is sorted. Turn and river kept in original order.
  */
-void EncodeCommunityCards(uint32_t &community_cards,
+void EncodeBoardRanks(uint32_t &community_cards,
                           const std::vector<Card>& cards) {
   community_cards = 0;
 
@@ -131,11 +131,60 @@ void EncodeStraightStatus(uint8_t &straight_status, int rank1, int rank2,
     straight_status = 0;
 }
 
-NodeKey U128Abstraction::GetKey(const InfoSet& i) const {
+/*
+ * Encode a 2-bit representation of a flush status. 
+ *
+ * Simple encoding: return max count of suits - 1
+ */
+void EncodeBoardFlushStatus(uint8_t &flush_status, const std::vector<Card>
+    &community_cards) {
+  std::vector<int> suit_counts(4);
+  for (Card c : community_cards)
+    suit_counts[int(c) % 4] += 1;
+  int mx = *std::max_element(suit_counts.begin(), suit_counts.end());
+  if (mx >= 5)
+    flush_status = 4;
+  else
+    flush_status = mx - 1;
+}
+
+void EncodeHistory(uint64_t &history, const std::vector<int> &action_history) {
+  int h = action_history.size() * 3;
+  assert(h <= 64);
+
+  for (int action_idx : action_history) {
+    assert(action_idx <= (1 << 3));
+    history = (history << 3) | action_idx;
+  }
+}
+
+NodeKey U128Abstraction::GetPublicKey(const GameState& state) const {
   NodeKey key = 0;
   
-  int card1 = int(i.hole_cards[0]);
-  int card2 = int(i.hole_cards[1]);
+  uint32_t community_cards;  // 5 * 4 = 20 bits
+  EncodeBoardRanks(community_cards, state.community_cards);
+
+  uint8_t flush_status;  // 2 bits
+  EncodeBoardFlushStatus(flush_status, state.community_cards);
+  assert(flush_status <= 4);
+
+  uint64_t history;
+  EncodeHistory(history, state.history);
+
+                                        // num bits used
+  key = key         | community_cards;  // 20
+  key = (key << 2)  | flush_status;     // 22
+  key = (key << 64) | history;          // 86
+
+  return key;
+}
+
+NodeKey U128Abstraction::GetPrivateKey(const GameState &state,
+    const std::vector<Card> &hole_cards) const {
+  NodeKey key = 0;
+  
+  int card1 = int(hole_cards[0]);
+  int card2 = int(hole_cards[1]);
   if (card1 < card2)
     std::swap(card1, card2);
 
@@ -145,33 +194,21 @@ NodeKey U128Abstraction::GetKey(const InfoSet& i) const {
   int rank2 = card2 / 4;
   int suit2 = card2 % 4;
 
-  uint8_t hole_cards;  // 2 * 4 = 8 bits
-  EncodeHoleCards(hole_cards, rank1, rank2);
-
-  uint32_t community_cards;  // 5 * 4 = 20 bits
-  EncodeCommunityCards(community_cards, i.state.community_cards);
+  uint8_t cards;  // 2 * 4 = 8 bits
+  EncodeHoleCards(cards, rank1, rank2);
 
   uint8_t flush_status;  // 2 bits
-  EncodeFlushStatus(flush_status, suit1, suit2, i.state.community_cards);
+  EncodeFlushStatus(flush_status, suit1, suit2, state.community_cards);
   assert(flush_status <= 3);
 
   uint8_t straight_status;  // 2 bits
-  EncodeStraightStatus(straight_status, rank1, rank2, i.state.community_cards);
+  EncodeStraightStatus(straight_status, rank1, rank2, state.community_cards);
   assert(straight_status <= 3);
 
-                                          // num bits used
-  key = key           | hole_cards;       // 8
-  key = (key << 20)   | community_cards;  // 28
-  key = (key << 2)    | flush_status;     // 30
-  key = (key << 2)    | straight_status;  // 32
-
-  int h = i.state.history.size();
-  assert(3 * h <= 128 - 32);  // used 32 bits so far, have 128 - 32 left
-
-  for (int j = 0; j < h; ++j) {
-    assert(i.state.history[j] <= (1 << 3));
-    key = (key << 3) | i.state.history[j];
-  }
+                                        // num bits used
+  key = key         | cards;            // 8
+  key = (key << 2)  | flush_status;     // 30
+  key = (key << 2)  | straight_status;  // 32
 
   return key;
 }

@@ -16,9 +16,9 @@ class Tree {
     std::vector<Node> nodes_;
     std::unique_ptr<ActionAbstraction> action_abst_;
     std::unique_ptr<InfoSetAbstraction> info_set_abst_;
-    NodeIdx BuildSubtree(InfoSet i);
-    NodeIdx CreateNode(InfoSet i, std::vector<NodeIdx> children);
-    NodeIdx CreateKey(InfoSet i);
+    NodeIdx BuildSubtree(GameState i);
+    NodeIdx CreateNode(GameState i, std::vector<NodeIdx> children);
+    NodeIdx CreateKey(GameState i);
   public:
     Tree(int pot, int max_raises, std::vector<int> starting_stacks,
         std::unique_ptr<ActionAbstraction> abst,
@@ -30,5 +30,5 @@ class Tree {
     void SetFlop(std::vector<Card> flop);
     void Reset();
     void Build();
-    NodeIdx GetOrCreateNodeIdx(InfoSet i);
+    NodeIdx GetOrCreateNodeIdx(GameState state);
 };

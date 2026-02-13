@@ -10,8 +10,12 @@
 using Card = phevaluator::Card;
 
 int main() {
-  std::vector<Action> actions = {Action(ActionType::Check),
-    Action(ActionType::Bet, 2), Action(ActionType::Call)};
+  std::vector<Action> actions = {
+    Action(ActionType::Check),
+    Action(ActionType::Bet, 2),
+    Action(ActionType::Raise, 10),
+    Action(ActionType::Call)
+  };
   std::unique_ptr<ActionAbstraction> a_abst =
     std::make_unique<FixedAbstraction>(std::move(actions));
   std::unique_ptr<InfoSetAbstraction> i_abst =
@@ -24,9 +28,11 @@ int main() {
   std::vector<Card> hand = {Card("Ah"), Card("Kc")};
 
   auto start = std::chrono::high_resolution_clock::now();
-  NodeIdx i = t.GetOrCreateNodeIdx(InfoSet{state, hand});
+  // NodeIdx i = t.GetOrCreateNodeIdx(state);
+  t.Build();
   auto end = std::chrono::high_resolution_clock::now();
-  std::cout << i << "\n";
+
   std::chrono::duration<double> elapsed = end - start;
   std::cout << "elapsed: " << elapsed.count() << " seconds" << std::endl;
+  std::cout << "num nodes: " << t.Size() << "\n";
 }

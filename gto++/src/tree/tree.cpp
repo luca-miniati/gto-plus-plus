@@ -28,8 +28,8 @@ void Tree::SetFlop(std::vector<Card> flop) {
   this->flop_ = flop;
 }
 
-NodeIdx Tree::CreateNode(InfoSet i, std::vector<NodeIdx> children) {
-  NodeKey key = this->info_set_abst_->GetKey(i);
+NodeIdx Tree::CreateNode(GameState state, std::vector<NodeIdx> children) {
+  NodeKey key = this->info_set_abst_->GetPublicKey(state);
   if (this->idx_.contains(key))
     return this->idx_[key];
 
@@ -40,62 +40,53 @@ NodeIdx Tree::CreateNode(InfoSet i, std::vector<NodeIdx> children) {
         idx,
         children.size(),
         children,
-        i.state.IsChanceNode(),
-        i.state.is_terminal
+        state.IsChanceNode(),
+        state.is_terminal
         )
       );
   return idx;
 }
 
-NodeIdx Tree::GetOrCreateNodeIdx(InfoSet i) {
-  NodeKey key = this->info_set_abst_->GetKey(i);
+NodeIdx Tree::GetOrCreateNodeIdx(GameState state) {
+  NodeKey key = this->info_set_abst_->GetPublicKey(state);
   if (this->idx_.contains(key))
     return this->idx_[key];
-  return this->BuildSubtree(i);
+  return this->BuildSubtree(state);
 }
 
-NodeIdx Tree::BuildSubtree(InfoSet i) {
-  if (i.state.is_terminal)
-    return this->CreateNode(i, {});
+NodeIdx Tree::BuildSubtree(GameState state) {
+  if (state.is_terminal)
+    return this->CreateNode(state, {});
 
   std::vector<NodeIdx> children;
-  if (i.state.IsChanceNode()) {  // chance node: we need to deal the turn/river
+  if (state.IsChanceNode()) {  // chance node: we need to deal the turn/river
     for (Card c : CARDS) {
-      if (!std::ranges::contains(i.hole_cards, c) &&
-          !std::ranges::contains(i.state.community_cards, c)) {
-        InfoSet j{i};
-        j.state.community_cards.push_back(c);
-        children.push_back(this->BuildSubtree(j));
+      if (!std::ranges::contains(state.community_cards, c)) {
+        GameState next_state = state;
+        next_state.community_cards.push_back(c);
+        children.push_back(this->BuildSubtree(next_state));
       }
     }
   } else {  // player node: player makes an action
-    auto actions = this->action_abst_->GetActions(i.state);
+    auto actions = this->action_abst_->GetActions(state);
     for (int action_idx = 0; action_idx < actions.size(); ++action_idx) {
-      if (GameModel::IsLegal(i.state, actions[action_idx], this->max_raises_)) {
-        GameState next = GameModel::Step(i.state, actions[action_idx], action_idx);
-        InfoSet j{next, i.hole_cards};
-        children.push_back(this->BuildSubtree(j));
+      if (GameModel::IsLegal(state, actions[action_idx], this->max_raises_)) {
+        GameState next_state = GameModel::Step(state, actions[action_idx],
+            action_idx);
+        children.push_back(this->BuildSubtree(next_state));
       }
     }
   }
-  return this->CreateNode(i, children);
+  return this->CreateNode(state, children);
 }
 
 void Tree::Build() {
   this->idx_.clear();
   this->nodes_.clear();
 
-  GameState state = GameState::InitialState(this->pot_, this->starting_stacks_, this->flop_);
-  for (Card c1 : CARDS)
-    for (Card c2 : CARDS)
-      if (c1 > c2 &&
-          c1 != this->flop_[0] &&
-          c1 != this->flop_[1] &&
-          c1 != this->flop_[2] &&
-          c2 != this->flop_[0] &&
-          c2 != this->flop_[1] &&
-          c2 != this->flop_[2])
-        this->BuildSubtree(InfoSet{state, {c1, c2}});
+  GameState state = GameState::InitialState(this->pot_, this->starting_stacks_,
+      this->flop_);
+  this->BuildSubtree(state);
 }
 
 int Tree::Size() {
