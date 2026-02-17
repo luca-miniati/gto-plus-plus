@@ -8,27 +8,34 @@
 
 class Tree {
   private:
+    int root_idx_;
     int max_raises_;
-    int pot_;
-    std::vector<int> starting_stacks_;
-    std::vector<Card> flop_;
-    std::unordered_map<NodeKey, NodeIdx> idx_;
-    std::vector<Node> nodes_;
+    std::vector<Chips> pot_contributions_;
+    std::vector<Chips> starting_stacks_;
+    Cards flop_;
+    std::unordered_map<PublicInfoKey, NodeIdx> idx_;
+    std::vector<NodePtr> nodes_;
     std::unique_ptr<ActionAbstraction> action_abst_;
     std::unique_ptr<InfoSetAbstraction> info_set_abst_;
-    NodeIdx BuildSubtree(GameState i);
-    NodeIdx CreateNode(GameState i, std::vector<NodeIdx> children);
-    NodeIdx CreateKey(GameState i);
+    NodeIdx BuildSubtree(GameState state);
+    NodeIdx CreateNode(GameState state, std::vector<NodeIdx> children);
   public:
-    Tree(int pot, int max_raises, std::vector<int> starting_stacks,
+    Tree(std::vector<Chips> pot_contributions, int max_raises,
+        std::vector<Chips> starting_stacks,
         std::unique_ptr<ActionAbstraction> abst,
         std::unique_ptr<InfoSetAbstraction> info_set_abst,
-        std::vector<Card> flop);
+        Cards flop);
     int Size();
     void SetMaxRaises(int max_raises);
     void SetActionAbstraction(std::unique_ptr<ActionAbstraction> action_abst);
-    void SetFlop(std::vector<Card> flop);
+    void SetFlop(Cards flop);
     void Reset();
     void Build();
-    NodeIdx GetOrCreateNodeIdx(GameState state);
+    NodePtr GetNode(const PublicInfoKey &key);
+    NodePtr GetChild(const NodePtr &u, int child_idx);
+    NodePtr GetRoot();
+    const PublicInfoKey GetPublicInfoKey(const Cards &community_cards,
+        const std::vector<int> &history) const;
+    const PrivateInfoKey GetPrivateInfoKey(const Cards &community_cards,
+        const Cards &hole_cards) const;
 };

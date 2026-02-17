@@ -6,7 +6,7 @@
 #include "game/game_state.h"
 #include "utils/utils.h"
 #include "phevaluator/phevaluator.h"
-using Card = phevaluator::Card;
+using Chips = int;
 
 enum class Street { Flop, Turn, River };
 
@@ -25,15 +25,16 @@ struct GameState {
   bool is_terminal;
   int current_player;
   int current_raises;
-  int pot;
   Street street;
-  std::vector<Card> community_cards;
-  std::vector<int> current_stacks;
-  std::vector<int> current_bets;
-  std::vector<int> history;  // store action indices
+  Cards community_cards;
+  std::vector<Chips> current_stacks;
+  std::vector<Chips> current_bets;
+  std::vector<Chips> pot_contributions;
+  std::vector<int> history;
   bool operator==(const GameState& other) const;
   bool IsChanceNode() const;
-  static GameState InitialState(int pot, std::vector<int> starting_stacks, std::vector<Card> flop);
+  static GameState InitialState(std::vector<Chips> pot_contributions,
+      std::vector<Chips> starting_stacks, Cards flop);
 };
 
 template<>

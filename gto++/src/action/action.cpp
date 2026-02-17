@@ -8,7 +8,7 @@ bool Action::operator==(const Action& other) const {
 std::size_t std::hash<Action>::operator()(const Action& a) const {
   std::size_t seed = 0;
   std::hash<int> hasher;
-  hash_combine(seed, hasher(static_cast<int>(a.type)));
-  hash_combine(seed, hasher(a.amount));
+  HashCombine(seed, hasher(static_cast<int>(a.type)));
+  HashCombine(seed, hasher(a.amount));
   return seed;
 };

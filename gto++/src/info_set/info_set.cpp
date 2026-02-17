@@ -8,8 +8,8 @@ bool InfoSet::operator==(const InfoSet& other) const {
 
 std::size_t std::hash<InfoSet>::operator()(const InfoSet& i) const {
   size_t seed = 0;
-  hash_combine(seed, std::hash<GameState>{}(i.state));
+  HashCombine(seed, std::hash<GameState>{}(i.state));
   for (Card c : i.hole_cards)
-    hash_combine(seed, std::hash<int>{}(int(c)));
+    HashCombine(seed, std::hash<int>{}(int(c)));
   return seed;
 }

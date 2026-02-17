@@ -4,35 +4,41 @@
 #include <chrono>
 #include <set>
 #include "tree/tree.h"
+#include "game/game_model.h"
+#include "solver/solver.h"
 #include "action/fixed_abstraction.h"
-#include "info_set/info_set_abstraction.h"
+#include "info_set/canonical_suit_abstraction.h"
 #include "phevaluator/phevaluator.h"
 using Card = phevaluator::Card;
 
 int main() {
   std::vector<Action> actions = {
     Action(ActionType::Check),
-    Action(ActionType::Bet, 2),
-    Action(ActionType::Raise, 10),
-    Action(ActionType::Call)
+    Action(ActionType::Call),
+    Action(ActionType::Fold),
+    Action(ActionType::Bet, 80)
   };
+
+  // std::vector<Card> flop = {Card("Jh"), Card("9d"), Card("2s")};
+  std::vector<Card> flop = {Card("Jh"), Card("9h"), Card("2h")};
   std::unique_ptr<ActionAbstraction> a_abst =
     std::make_unique<FixedAbstraction>(std::move(actions));
+
   std::unique_ptr<InfoSetAbstraction> i_abst =
-    std::make_unique<U128Abstraction>();
+    std::make_unique<CanonicalSuitAbstraction>();
 
-  std::vector<Card> flop = {Card("Jh"), Card("9d"), Card("2s")};
-  Tree t(6, 3, {100, 100}, std::move(a_abst), std::move(i_abst), flop);
 
-  GameState state = GameState::InitialState(2 * 3, {100, 100}, flop);
-  std::vector<Card> hand = {Card("Ah"), Card("Kc")};
+  std::cout << "building tree:" << std::endl;
 
   auto start = std::chrono::high_resolution_clock::now();
-  // NodeIdx i = t.GetOrCreateNodeIdx(state);
-  t.Build();
+
+  Solver s({20, 20}, 1, {80, 80}, std::move(a_abst), std::move(i_abst), flop);
+  s.Solve();
+  // Tree t({20, 20}, 1, {80, 80}, std::move(a_abst), std::move(i_abst), flop);
+  // t.Build();
+
   auto end = std::chrono::high_resolution_clock::now();
 
   std::chrono::duration<double> elapsed = end - start;
   std::cout << "elapsed: " << elapsed.count() << " seconds" << std::endl;
-  std::cout << "num nodes: " << t.Size() << "\n";
 }
