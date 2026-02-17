@@ -13,15 +13,14 @@ struct CFRData {
   std::vector<double> regret_sum, strategy, strategy_sum;
 };
 
-class Node {
-  private:
-    bool is_chance_node_;
-    int current_player_;
-    int num_actions_;
-    std::optional<GameState> terminal_game_state_;
-    std::vector<NodeIdx> children_;
-    std::unordered_map<PrivateInfoKey, CFRData> strategies_;
-  public:
+struct Node {
+    bool is_chance_node;
+    int current_player;
+    int num_actions;
+    std::optional<GameState> terminal_game_state;
+    std::optional<std::vector<std::vector<float>>> terminal_utility_matrix;
+    std::vector<NodeIdx> children;
+    std::unordered_map<PrivateInfoKey, CFRData> strategies;
     Node(bool is_chance_node,
         int current_player,
         int num_actions,

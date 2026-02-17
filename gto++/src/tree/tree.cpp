@@ -41,10 +41,8 @@ const PrivateInfoKey Tree::GetPrivateInfoKey(const Cards &community_cards,
 
 NodeIdx Tree::CreateNode(GameState state, std::vector<NodeIdx> children) {
   PublicInfoKey key = GetPublicInfoKey(state.community_cards, state.history);
-  if (idx_.contains(key)) {
-    std::cout << "reusing key" << '\n';
+  if (idx_.contains(key))
     return idx_[key];
-  }
 
   NodeIdx idx = nodes_.size();
   idx_[key] = idx;
