@@ -45,7 +45,8 @@ class InfoSetAbstraction {
     virtual PrivateInfoKey GetPrivateInfoKey(const Cards &community_cards,
         const std::vector<Card> &hole_cards) const = 0;
 
-    virtual std::vector<PrivateInfoKey> GetAllPrivateInfoKeys(...);
+    virtual std::vector<PrivateInfoKey> GetAllPrivateInfoKeys(
+        const Cards &community_cards) const = 0;
 };
 
 inline std::string str2(PublicInfoKey x) {

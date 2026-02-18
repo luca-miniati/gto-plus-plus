@@ -39,56 +39,76 @@ const PrivateInfoKey Tree::GetPrivateInfoKey(const Cards &community_cards,
   return info_set_abst_->GetPrivateInfoKey(community_cards, hole_cards);
 }
 
-NodeIdx Tree::CreateNode(GameState state, std::vector<NodeIdx> children) {
-  PublicInfoKey key = GetPublicInfoKey(state.community_cards, state.history);
-  if (idx_.contains(key))
-    return idx_[key];
-
+NodeIdx Tree::CreateNode(
+    const PublicInfoKey &key,
+    const GameState &state
+    ) {
   NodeIdx idx = nodes_.size();
   idx_[key] = idx;
 
-  std::optional<GameState> terminal_game_state = state.is_terminal ? std::optional<GameState>{state} : std::nullopt;
+  auto terminal_game_state = (state.is_terminal)
+    ? std::optional(state)
+    : std::nullopt;
 
-  if terminal:
-    x = info_set_abst_->GetAl
-
-  bool is_chance_node = state.IsChanceNode();
   NodePtr u = std::make_shared<Node>(
-      Node(is_chance_node,
-        state.current_player,
-        children.size(),
-        terminal_game_state,
-        children)
+      Node(
+        /* is_chance_node       =*/ state.IsChanceNode(),
+        /* current_player       =*/ state.current_player,
+        /* terminal_game_state  =*/ terminal_game_state
+        )
       );
+
   nodes_.push_back(u);
   return idx;
 }
 
-NodeIdx Tree::BuildSubtree(GameState state) {
-  if (state.is_terminal)
-    return CreateNode(state, {});
+NodeIdx Tree::BuildSubtree(const GameState &state) {
+  PublicInfoKey key = info_set_abst_->GetPublicInfoKey(
+      state.community_cards,
+      state.history
+      );
+  
+  if (HasNode(key))
+    return idx_.at(key);
 
-  std::vector<NodeIdx> children;
+  if (state.is_terminal)
+    return CreateNode(key, state);
+
+  NodeIdx idx = CreateNode(key, state);
+  NodePtr u = nodes_[idx];
+
   if (state.IsChanceNode()) {  // chance node: we need to deal the turn/river
-    for (Card c : CARDS) {
-      if (!std::ranges::contains(state.community_cards, c)) {
-        GameState next_state = state;
-        next_state.community_cards.push_back(c);
-        children.push_back(BuildSubtree(next_state));
+    for (Card card : CARDS) {
+      if (!std::ranges::contains(state.community_cards, card)) {
+        GameState next_state = GameModel::Step(state, card);
+        PublicInfoKey next_key = info_set_abst_->GetPublicInfoKey(
+            next_state.community_cards,
+            next_state.history
+            );
+        if (!HasNode(next_key))
+          u->AddChild(BuildSubtree(next_state));
       }
     }
   } else {  // player node: player makes an action
-    int mn_unused_action = 0;
     auto actions = action_abst_->GetActions(state);
     for (int action_idx = 0; action_idx < actions.size(); ++action_idx) {
       if (GameModel::IsLegal(state, actions[action_idx], max_raises_)) {
-        GameState next_state = GameModel::Step(state, actions[action_idx],
-            mn_unused_action++);
-        children.push_back(BuildSubtree(next_state));
+        GameState next_state = GameModel::Step(
+            /* state      =*/ state,
+            /* action     =*/ actions[action_idx],
+            /* action_idx =*/ u->GetNumChildren()
+            );
+        PublicInfoKey next_key = info_set_abst_->GetPublicInfoKey(
+            next_state.community_cards,
+            next_state.history
+            );
+        if (!HasNode(next_key))
+          u->AddChild(BuildSubtree(next_state));
       }
     }
   }
-  return CreateNode(state, children);
+
+  return idx;
 }
 
 void Tree::Build() {
@@ -108,6 +128,10 @@ NodePtr Tree::GetNode(const PublicInfoKey &key) {
   return nodes_[idx_.at(key)];
 }
 
+NodePtr Tree::GetNode(const NodeIdx &idx) {
+  return nodes_[idx];
+}
+
 NodePtr Tree::GetChild(const NodePtr &u, int child_idx) {
   NodeIdx idx = u->GetChildIdx(child_idx);
   return nodes_[idx];
@@ -115,4 +139,8 @@ NodePtr Tree::GetChild(const NodePtr &u, int child_idx) {
 
 NodePtr Tree::GetRoot() {
   return nodes_[root_idx_];
+}
+
+bool Tree::HasNode(const PublicInfoKey &key) const {
+  return idx_.contains(key);
 }

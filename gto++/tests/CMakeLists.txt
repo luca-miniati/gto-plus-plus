@@ -1,5 +1,8 @@
 cmake_policy(SET CMP0135 NEW)
 
+# -----------------------
+# Fetch GoogleTest
+# -----------------------
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -8,21 +11,26 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_executable(test_action action/test_action.cpp)
-add_executable(test_game_state game/test_game_state.cpp)
-add_executable(test_game_model game/test_game_model.cpp)
-add_executable(test_canonical_suit_abstraction info_set/test_canonical_suit_abstraction.cpp)
-target_link_libraries(test_action PRIVATE gto++ gtest_main)
-target_link_libraries(test_game_state PRIVATE gto++ gtest_main)
-target_link_libraries(test_game_model PRIVATE gto++ gtest_main)
-target_link_libraries(test_canonical_suit_abstraction PRIVATE gto++ gtest_main)
-target_include_directories(test_action PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
-target_include_directories(test_game_state PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
-target_include_directories(test_game_model PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
-target_include_directories(test_canonical_suit_abstraction PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+# -----------------------
+# Find all test source files
+# -----------------------
+file(GLOB_RECURSE TEST_SOURCES
+  "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
+)
 
-include(GoogleTest)
-gtest_discover_tests(test_action)
-gtest_discover_tests(test_game_state)
-gtest_discover_tests(test_game_model)
-gtest_discover_tests(test_canonical_suit_abstraction)
+# -----------------------
+# Add test executables
+# -----------------------
+foreach(test_src ${TEST_SOURCES})
+    get_filename_component(test_name ${test_src} NAME_WE)
+
+    add_executable(${test_name} ${test_src})
+
+    # Link to gto++ and gtest
+    target_link_libraries(${test_name} PRIVATE gto++ gtest_main)
+
+    # Discover tests for ctest
+    include(GoogleTest)
+    gtest_discover_tests(${test_name})
+endforeach()
+

@@ -75,6 +75,15 @@ bool GameModel::IsLegal(const GameState &state, const Action &action, int max_ra
   return true;
 }
 
+GameState GameModel::Step(const GameState &state, const Card &card) {
+  if (!state.IsChanceNode())
+    throw std::runtime_error("GameModel::Step: tried to deal card to non-chance node");
+
+  GameState next_state = state;
+  next_state.community_cards.push_back(card);
+  return next_state;
+}
+
 GameState GameModel::Step(const GameState &state, const Action &action,
     const int action_idx) {
   if (state.is_terminal)

@@ -84,7 +84,7 @@ double Solver::CFR(NodePtr u, std::vector<int> history, Cards community_cards,
   u->UpdateStrategy(key, reach_p_self);
 
   double node_util = 0;
-  int num_actions = u->GetNumActions();
+  int num_actions = u->GetNumChildren();
   std::vector<double> util(num_actions);
 
   for (int action_idx = 0; action_idx < num_actions; ++action_idx) {

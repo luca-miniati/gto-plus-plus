@@ -7,4 +7,7 @@ class CanonicalSuitAbstraction : public InfoSetAbstraction {
 
     PrivateInfoKey GetPrivateInfoKey(const Cards &community_cards,
         const std::vector<Card> &hole_cards) const override;
+
+    std::vector<PrivateInfoKey> GetAllPrivateInfoKeys(
+        const Cards &community_cards) const override;
 };

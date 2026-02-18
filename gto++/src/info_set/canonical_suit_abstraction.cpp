@@ -1,85 +1,148 @@
 #include <cassert>
 #include <iostream>
+#include <unordered_set>
 #include "info_set/canonical_suit_abstraction.h"
 
-
 /*
- * Given a sequence of suits src, return the canonical sequence of tgt with
- * respect to src.
+ * Sorts the flop, returns cards as ints.
  */
-uint64_t Canonicalize(const uint64_t &tgt, int num_cards_tgt,
-    const uint64_t &src, int num_cards_src) {
-  // iso[s] = -1 => suit s hasn't been bound
-  std::array<int, 5> iso = {-1, -1, -1, -1, -1};
-
-  int mn_unused_suit = 1;
-  for (int i = num_cards_src - 1; i >= 0; --i) {
-    int s = (src >> 3 * i) & 0b111;
-    if (iso[s] == -1) iso[s] = mn_unused_suit++;
-  }
-
-  uint64_t ans = 0;
-  for (int i = num_cards_tgt - 1; i >= 0; --i) {
-    int s = (tgt >> 3 * i) & 0b111;
-    if (iso[s] == -1) iso[s] = mn_unused_suit++;
-    ans |= (iso[s] << 3 * i);
-  }
-
-  return ans;
-}
-
-PublicInfoKey CanonicalSuitAbstraction::GetPublicInfoKey(
-    const Cards &community_cards,
-    const std::vector<int> &history) const {
+std::vector<int> CommunityCardsToInts(const Cards &community_cards) {
   std::vector<int> cards;
   for (int i = 0; i < 3; ++i)
     cards.push_back(int(community_cards[i]));
   std::ranges::sort(cards, std::ranges::greater());
   for (int i = 3; i < community_cards.size(); ++i)
     cards.push_back(int(community_cards[i]));
+  return cards;
+}
 
-  PublicInfoKey suits = 0;  // <= 3 * 5 = 15 bits
+std::vector<int> Canonicalize(
+    const Cards &community_cards
+    ) {
+  std::vector<int> ccs;
+  for (Card c : community_cards)
+    ccs.push_back(int(c));
+  std::sort(ccs.begin(), ccs.begin() + 3);  // sort flop
+
+  std::vector<int> iso = {0, 1, 2, 3};
+  std::vector<int> best = ccs;
+
+  do {
+    std::vector<int> cards;
+    for (int c : ccs)
+      // reassign the suit
+      cards.push_back(c - c % 4 + iso[c % 4]);
+    std::sort(cards.begin(), cards.begin() + 3);
+    best = std::min(best, cards);
+  } while (std::next_permutation(iso.begin(), iso.end()));
+
+  return best;
+}
+
+std::vector<int> Canonicalize(
+    const Cards &community_cards,
+    const Cards &hole_cards
+    ) {
+  std::vector<int> ccs;
+  for (Card c : community_cards)
+    ccs.push_back(int(c));
+  std::sort(ccs.begin(), ccs.begin() + 3);  // sort flop
+  std::vector<int> hcs;
+  for (Card c : hole_cards)
+    hcs.push_back(int(c));
+  std::sort(hcs.begin(), hcs.end());  // sort hole cards
+
+  std::vector<int> iso = {0, 1, 2, 3};
+  std::vector<int> best;
+  for (int c : ccs) best.push_back(c);
+  for (int c : hcs) best.push_back(c);
+  std::sort(best.begin(), best.begin() + 3);
+  std::sort(best.begin() + ccs.size(),
+      best.begin() + ccs.size() + 2);
+
+  do {
+    std::vector<int> out;
+    for (int c : ccs)
+      // reassign the suit
+      out.push_back(c - c % 4 + iso[c % 4]);
+    for (int c : hcs)
+      // reassign the suit
+      out.push_back(c - c % 4 + iso[c % 4]);
+    std::sort(out.begin(), out.begin() + 3);
+    std::sort(out.begin() + ccs.size(),
+        out.begin() + ccs.size() + 2);
+    best = std::min(best, out);
+  } while (std::next_permutation(iso.begin(), iso.end()));
+
+  return best;
+
+}
+
+uint64_t EncodeSuits(const std::vector<int> &cards) {
+  uint64_t suits = 0;
   for (int c : cards)
     suits = (suits << 3) | (c % 4 + 1);
-  suits = Canonicalize(suits, cards.size(), suits, cards.size());
+  return suits;
+}
 
-  PublicInfoKey ranks = 0;  // <= 4 * 5 = 20 bits
+uint64_t EncodeRanks(const std::vector<int> &cards) {
+  uint64_t ranks = 0;
   for (int c : cards)
     ranks = (ranks << 4) | (c / 4 + 1);
+  return ranks;
+}
 
-  PublicInfoKey actions = 0;
+uint64_t EncodeActions(const std::vector<int> &history) {
+  uint64_t actions = 0;
   for (int a : history)
     actions = (actions << 3) | (a + 1);
+  return actions;
+}
 
-  return (((suits << 20) | ranks) << 40) | actions;
+PublicInfoKey CanonicalSuitAbstraction::GetPublicInfoKey(
+    const Cards &community_cards,
+    const std::vector<int> &history) const {
+
+  std::vector<int> ccs = Canonicalize(community_cards);
+
+  uint64_t suits = EncodeSuits(ccs);
+  uint64_t ranks = EncodeRanks(ccs);
+  uint64_t actions = EncodeActions(history);
+
+  PublicInfoKey key;
+  key = suits;
+  key = (key << 20) | ranks;
+  key = (key << 40) | actions;
+  return key;
 }
 
 PrivateInfoKey CanonicalSuitAbstraction::GetPrivateInfoKey(
     const Cards &community_cards,
     const std::vector<Card> &hole_cards) const {
-  int num_community_cards = community_cards.size();
-  std::vector<int> cards;
-  for (int i = 0; i < 3; ++i)
-    cards.push_back(int(community_cards[i]));
-  std::ranges::sort(cards, std::ranges::greater());
-  for (int i = 3; i < num_community_cards; ++i)
-    cards.push_back(int(community_cards[i]));
 
-  uint64_t board_suits = 0; 
-  for (int c : cards)
-    board_suits = (board_suits << 3) | (c % 4 + 1);
-  board_suits = Canonicalize(board_suits, num_community_cards, board_suits,
-      num_community_cards);
+  std::vector<int> canonicalized = Canonicalize(community_cards, hole_cards);
 
-  int c1 = std::min(int(hole_cards[0]), int(hole_cards[1]));
-  int c2 = std::max(int(hole_cards[0]), int(hole_cards[1]));
-  cards.push_back(c1);
-  cards.push_back(c2);
+  std::vector<int> hcs;
+  for (int i = community_cards.size(); i < community_cards.size() + 2; ++i)
+    hcs.push_back(canonicalized[i]);
 
-  uint64_t hole_suits = ((c1 % 4 + 1) << 3) | (c2 % 4 + 1);
-  hole_suits = Canonicalize(hole_suits, 2, board_suits, num_community_cards);
-
-  uint64_t ranks = ((c1 / 4 + 1) << 4) | (c2 / 4 + 1); 
+  uint64_t hole_suits = EncodeSuits(hcs);
+  uint64_t ranks = EncodeRanks(hcs);
 
   return (hole_suits << 8) | ranks;
 }
+
+std::vector<PrivateInfoKey> CanonicalSuitAbstraction::GetAllPrivateInfoKeys(
+    const Cards &community_cards) const {
+  std::unordered_set<PrivateInfoKey> keys;
+  for (Card c1 : CARDS)
+    for (Card c2 : CARDS)
+      if (c1 != c2 &&
+          !std::ranges::contains(community_cards, c1) &&
+          !std::ranges::contains(community_cards, c2))
+        keys.insert(GetPrivateInfoKey(community_cards, {c1, c2}));
+  std::vector<PrivateInfoKey> ans(keys.begin(), keys.end());
+  std::ranges::sort(ans);
+  return ans;
+}
+

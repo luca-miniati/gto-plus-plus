@@ -17,8 +17,9 @@ class Tree {
     std::vector<NodePtr> nodes_;
     std::unique_ptr<ActionAbstraction> action_abst_;
     std::unique_ptr<InfoSetAbstraction> info_set_abst_;
-    NodeIdx BuildSubtree(GameState state);
-    NodeIdx CreateNode(GameState state, std::vector<NodeIdx> children);
+    NodeIdx BuildSubtree(const GameState &state);
+    NodeIdx CreateNode(const PublicInfoKey &key, const GameState &state);
+    NodeIdx CreateTerminalNode(const PublicInfoKey &key, const GameState &state);
   public:
     Tree(std::vector<Chips> pot_contributions, int max_raises,
         std::vector<Chips> starting_stacks,
@@ -32,10 +33,12 @@ class Tree {
     void Reset();
     void Build();
     NodePtr GetNode(const PublicInfoKey &key);
+    NodePtr GetNode(const NodeIdx &idx);
     NodePtr GetChild(const NodePtr &u, int child_idx);
     NodePtr GetRoot();
     const PublicInfoKey GetPublicInfoKey(const Cards &community_cards,
         const std::vector<int> &history) const;
     const PrivateInfoKey GetPrivateInfoKey(const Cards &community_cards,
         const Cards &hole_cards) const;
+    bool HasNode(const PublicInfoKey &key) const;
 };

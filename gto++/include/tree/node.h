@@ -13,25 +13,26 @@ struct CFRData {
   std::vector<double> regret_sum, strategy, strategy_sum;
 };
 
-struct Node {
-    bool is_chance_node;
-    int current_player;
-    int num_actions;
-    std::optional<GameState> terminal_game_state;
-    std::optional<std::vector<std::vector<float>>> terminal_utility_matrix;
-    std::vector<NodeIdx> children;
-    std::unordered_map<PrivateInfoKey, CFRData> strategies;
+class Node {
+  private:
+    bool is_chance_node_;
+    int current_player_;
+    int num_children_;
+    std::optional<GameState> terminal_game_state_;
+    std::optional<std::vector<std::vector<float>>> terminal_utility_matrix_;
+    std::vector<NodeIdx> children_;
+    std::unordered_map<PrivateInfoKey, CFRData> strategies_;
+  public:
     Node(bool is_chance_node,
         int current_player,
-        int num_actions,
-        std::optional<GameState> terminal_game_state,
-        std::vector<NodeIdx> children);
-    bool HasStrategy(PrivateInfoKey key);
-    void InitStrategy(PrivateInfoKey key);
+        std::optional<GameState> terminal_game_state);
+    bool HasStrategy(const PrivateInfoKey &key) const;
+    void InitStrategy(const PrivateInfoKey &key);
     NodeIdx GetChildIdx(int action_idx);
     std::vector<NodeIdx> GetChildren();
     int GetCurrentPlayer();
-    int GetNumActions();
+    int GetNumChildren();
+    void AddChild(NodeIdx idx);
     void UpdateStrategy(PrivateInfoKey key, double reach_p);
     std::vector<double> GetAverageStrategy(PrivateInfoKey key) const;
     double GetRegretSum(PrivateInfoKey key, int action_idx) const;
