@@ -8,37 +8,50 @@
 
 class Tree {
   private:
-    int root_idx_;
     int max_raises_;
     std::vector<Chips> pot_contributions_;
     std::vector<Chips> starting_stacks_;
     Cards flop_;
+
+    NodeIdx root_idx_;
     std::unordered_map<PublicInfoKey, NodeIdx> idx_;
-    std::vector<NodePtr> nodes_;
+    std::vector<Node> nodes_;
+    std::vector<NodeIdx> edges_;
+
     std::unique_ptr<ActionAbstraction> action_abst_;
     std::unique_ptr<InfoSetAbstraction> info_set_abst_;
-    NodeIdx BuildSubtree(const GameState &state);
-    NodeIdx CreateNode(const PublicInfoKey &key, const GameState &state);
-    NodeIdx CreateTerminalNode(const PublicInfoKey &key, const GameState &state);
+
+    NodeIdx BuildSubtree(
+        const GameState &state,
+        NodeMap &node_map
+        );
+    NodeIdx CreateNode(
+        const PublicInfoKey &key,
+        const GameState &state
+        );
+    void BuildEdges(
+        NodeIdx idx,
+        NodeMap &node_map
+        );
   public:
     Tree(std::vector<Chips> pot_contributions, int max_raises,
         std::vector<Chips> starting_stacks,
         std::unique_ptr<ActionAbstraction> abst,
         std::unique_ptr<InfoSetAbstraction> info_set_abst,
         Cards flop);
-    int Size();
-    void SetMaxRaises(int max_raises);
-    void SetActionAbstraction(std::unique_ptr<ActionAbstraction> action_abst);
-    void SetFlop(Cards flop);
-    void Reset();
+
+    std::size_t Size() const;
+
     void Build();
-    NodePtr GetNode(const PublicInfoKey &key);
-    NodePtr GetNode(const NodeIdx &idx);
-    NodePtr GetChild(const NodePtr &u, int child_idx);
-    NodePtr GetRoot();
+
+    bool HasNode(PublicInfoKey key) const;
+    NodeIdx Child(NodeIdx u, NodeIdx child_idx) const;
+    NodeIdx Root() const;
+    int NumChildren(NodeIdx u) const;
+    bool IsTerminal(NodeIdx u) const;
+
     const PublicInfoKey GetPublicInfoKey(const Cards &community_cards,
         const std::vector<int> &history) const;
     const PrivateInfoKey GetPrivateInfoKey(const Cards &community_cards,
         const Cards &hole_cards) const;
-    bool HasNode(const PublicInfoKey &key) const;
 };

@@ -14,7 +14,7 @@ inline void HashCombine(std::size_t& seed, std::size_t value) {
     seed ^= value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }
 
-inline const Cards CARDS = {
+inline const std::array<Card, 52> CARDS = {
   Card("2c"), Card("2d"), Card("2h"), Card("2s"),
   Card("3c"), Card("3d"), Card("3h"), Card("3s"),
   Card("4c"), Card("4d"), Card("4h"), Card("4s"),

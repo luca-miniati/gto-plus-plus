@@ -1,116 +1,146 @@
 #include <cassert>
 #include <iostream>
 #include <unordered_set>
+#include <array>
+#include <algorithm>
 #include "info_set/canonical_suit_abstraction.h"
 
-/*
- * Sorts the flop, returns cards as ints.
- */
-std::vector<int> CommunityCardsToInts(const Cards &community_cards) {
-  std::vector<int> cards;
-  for (int i = 0; i < 3; ++i)
-    cards.push_back(int(community_cards[i]));
-  std::ranges::sort(cards, std::ranges::greater());
-  for (int i = 3; i < community_cards.size(); ++i)
-    cards.push_back(int(community_cards[i]));
-  return cards;
-}
+namespace {
 
-std::vector<int> Canonicalize(
-    const Cards &community_cards
-    ) {
-  std::vector<int> ccs;
-  for (Card c : community_cards)
-    ccs.push_back(int(c));
-  std::sort(ccs.begin(), ccs.begin() + 3);  // sort flop
+  static inline void sort3(int* a) {
+    if (a[0] < a[1]) std::swap(a[0], a[1]);
+    if (a[1] < a[2]) std::swap(a[1], a[2]);
+    if (a[0] < a[1]) std::swap(a[0], a[1]);
+  }
 
-  std::vector<int> iso = {0, 1, 2, 3};
-  std::vector<int> best = ccs;
+  static inline void sort2(int* a) {
+    if (a[0] < a[1]) std::swap(a[0], a[1]);
+  }
 
-  do {
-    std::vector<int> cards;
-    for (int c : ccs)
-      // reassign the suit
-      cards.push_back(c - c % 4 + iso[c % 4]);
-    std::sort(cards.begin(), cards.begin() + 3);
-    best = std::min(best, cards);
-  } while (std::next_permutation(iso.begin(), iso.end()));
+  static constexpr int SUIT_PERMS[24][4] = {
+    {0,1,2,3},{0,1,3,2},{0,2,1,3},{0,2,3,1},{0,3,1,2},{0,3,2,1},
+    {1,0,2,3},{1,0,3,2},{1,2,0,3},{1,2,3,0},{1,3,0,2},{1,3,2,0},
+    {2,0,1,3},{2,0,3,1},{2,1,0,3},{2,1,3,0},{2,3,0,1},{2,3,1,0},
+    {3,0,1,2},{3,0,2,1},{3,1,0,2},{3,1,2,0},{3,2,0,1},{3,2,1,0}
+  };
 
-  return best;
-}
+  static inline int CanonicalizeCommunity(
+      const Cards& community_cards,
+      std::array<int, 5>& out)
+  {
+    const int n = community_cards.size();
 
-std::vector<int> Canonicalize(
-    const Cards &community_cards,
-    const Cards &hole_cards
-    ) {
-  std::vector<int> ccs;
-  for (Card c : community_cards)
-    ccs.push_back(int(c));
-  std::sort(ccs.begin(), ccs.begin() + 3);  // sort flop
-  std::vector<int> hcs;
-  for (Card c : hole_cards)
-    hcs.push_back(int(c));
-  std::sort(hcs.begin(), hcs.end());  // sort hole cards
+    std::array<int, 5> base{};
+    for (int i = 0; i < n; ++i)
+      base[i] = int(community_cards[i]);
 
-  std::vector<int> iso = {0, 1, 2, 3};
-  std::vector<int> best;
-  for (int c : ccs) best.push_back(c);
-  for (int c : hcs) best.push_back(c);
-  std::sort(best.begin(), best.begin() + 3);
-  std::sort(best.begin() + ccs.size(),
-      best.begin() + ccs.size() + 2);
+    if (n >= 3)
+      sort3(base.data());
 
-  do {
-    std::vector<int> out;
-    for (int c : ccs)
-      // reassign the suit
-      out.push_back(c - c % 4 + iso[c % 4]);
-    for (int c : hcs)
-      // reassign the suit
-      out.push_back(c - c % 4 + iso[c % 4]);
-    std::sort(out.begin(), out.begin() + 3);
-    std::sort(out.begin() + ccs.size(),
-        out.begin() + ccs.size() + 2);
-    best = std::min(best, out);
-  } while (std::next_permutation(iso.begin(), iso.end()));
+    std::array<int, 5> best = base;
 
-  return best;
+    for (int p = 0; p < 24; ++p) {
+      std::array<int, 5> tmp;
 
-}
+      for (int i = 0; i < n; ++i) {
+        int c = base[i];
+        tmp[i] = c - (c % 4) + SUIT_PERMS[p][c % 4];
+      }
 
-uint64_t EncodeSuits(const std::vector<int> &cards) {
-  uint64_t suits = 0;
-  for (int c : cards)
-    suits = (suits << 3) | (c % 4 + 1);
-  return suits;
-}
+      if (n >= 3)
+        sort3(tmp.data());
 
-uint64_t EncodeRanks(const std::vector<int> &cards) {
-  uint64_t ranks = 0;
-  for (int c : cards)
-    ranks = (ranks << 4) | (c / 4 + 1);
-  return ranks;
-}
+      if (std::lexicographical_compare(
+            tmp.begin(), tmp.begin()+n,
+            best.begin(), best.begin()+n))
+        best = tmp;
+    }
 
-uint64_t EncodeActions(const std::vector<int> &history) {
-  uint64_t actions = 0;
-  for (int a : history)
-    actions = (actions << 3) | (a + 1);
-  return actions;
-}
+    out = best;
+    return n;
+  }
+
+  static inline int CanonicalizeAll(
+      const Cards& community_cards,
+      const Cards& hole_cards,
+      std::array<int, 7>& out)
+  {
+    const int nC = community_cards.size();
+    const int total = nC + 2;
+
+    std::array<int, 7> base{};
+
+    for (int i = 0; i < nC; ++i)
+      base[i] = int(community_cards[i]);
+
+    for (int i = 0; i < 2; ++i)
+      base[nC + i] = int(hole_cards[i]);
+
+    if (nC >= 3)
+      sort3(base.data());
+
+    sort2(base.data() + nC);
+
+    std::array<int, 7> best = base;
+
+    for (int p = 0; p < 24; ++p) {
+      std::array<int, 7> tmp;
+
+      for (int i = 0; i < total; ++i) {
+        int c = base[i];
+        tmp[i] = c - (c % 4) + SUIT_PERMS[p][c % 4];
+      }
+
+      if (nC >= 3)
+        sort3(tmp.data());
+
+      sort2(tmp.data() + nC);
+
+      if (std::lexicographical_compare(
+            tmp.begin(), tmp.begin() + total,
+            best.begin(), best.begin() + total))
+        best = tmp;
+    }
+
+    out = best;
+    return total;
+  }
+
+  static inline uint64_t EncodeSuits(const int* cards, int n) {
+    uint64_t suits = 0;
+    for (int i = 0; i < n; ++i)
+      suits = (suits << 3) | (cards[i] % 4 + 1);
+    return suits;
+  }
+
+  static inline uint64_t EncodeRanks(const int* cards, int n) {
+    uint64_t ranks = 0;
+    for (int i = 0; i < n; ++i)
+      ranks = (ranks << 4) | (cards[i] / 4 + 1);
+    return ranks;
+  }
+
+  static inline uint64_t EncodeActions(const std::vector<int>& history) {
+    uint64_t actions = 0;
+    for (int a : history)
+      actions = (actions << 3) | (a + 1);
+    return actions;
+  }
+
+} // namespace
 
 PublicInfoKey CanonicalSuitAbstraction::GetPublicInfoKey(
     const Cards &community_cards,
     const std::vector<int> &history) const {
 
-  std::vector<int> ccs = Canonicalize(community_cards);
+  std::array<int, 5> canonical{};
+  int n = CanonicalizeCommunity(community_cards, canonical);
 
-  uint64_t suits = EncodeSuits(ccs);
-  uint64_t ranks = EncodeRanks(ccs);
+  uint64_t suits = EncodeSuits(canonical.data(), n);
+  uint64_t ranks = EncodeRanks(canonical.data(), n);
   uint64_t actions = EncodeActions(history);
 
-  PublicInfoKey key;
-  key = suits;
+  PublicInfoKey key = suits;
   key = (key << 20) | ranks;
   key = (key << 40) | actions;
   return key;
@@ -120,27 +150,40 @@ PrivateInfoKey CanonicalSuitAbstraction::GetPrivateInfoKey(
     const Cards &community_cards,
     const std::vector<Card> &hole_cards) const {
 
-  std::vector<int> canonicalized = Canonicalize(community_cards, hole_cards);
+  std::array<int, 7> canonical{};
+  int total = CanonicalizeAll(
+      community_cards,
+      hole_cards,
+      canonical);
 
-  std::vector<int> hcs;
-  for (int i = community_cards.size(); i < community_cards.size() + 2; ++i)
-    hcs.push_back(canonicalized[i]);
+  const int nC = community_cards.size();
 
-  uint64_t hole_suits = EncodeSuits(hcs);
-  uint64_t ranks = EncodeRanks(hcs);
+  std::array<int, 2> hole{};
+  hole[0] = canonical[nC];
+  hole[1] = canonical[nC+1];
 
-  return (hole_suits << 8) | ranks;
+  uint64_t suits = (hole[0] % 4 + 1);
+  suits = (suits << 3) | (hole[1] % 4 + 1);
+
+  uint64_t ranks = (hole[0] / 4 + 1);
+  ranks = (ranks << 4) | (hole[1] / 4 + 1);
+
+  return (suits << 8) | ranks;
 }
 
-std::vector<PrivateInfoKey> CanonicalSuitAbstraction::GetAllPrivateInfoKeys(
+std::vector<PrivateInfoKey>
+CanonicalSuitAbstraction::GetAllPrivateInfoKeys(
     const Cards &community_cards) const {
+
   std::unordered_set<PrivateInfoKey> keys;
+
   for (Card c1 : CARDS)
     for (Card c2 : CARDS)
       if (c1 != c2 &&
           !std::ranges::contains(community_cards, c1) &&
           !std::ranges::contains(community_cards, c2))
         keys.insert(GetPrivateInfoKey(community_cards, {c1, c2}));
+
   std::vector<PrivateInfoKey> ans(keys.begin(), keys.end());
   std::ranges::sort(ans);
   return ans;

@@ -162,7 +162,7 @@ TEST(TestStep, CallOnFlopAdvancesToTurn) {
   ASSERT_EQ(next.current_bets[1], 0);  // Bets reset
   ASSERT_EQ(next.current_stacks[0], 100 - 10);
   ASSERT_EQ(next.current_stacks[1], 100 - 10);
-  ASSERT_TRUE(next.IsChanceNode());  // turn needs to be dealt
+  ASSERT_TRUE(next.IsChance());  // turn needs to be dealt
 }
 
 TEST(TestStep, CallOnTurnAdvancesToRiver) {
@@ -182,7 +182,7 @@ TEST(TestStep, CallOnTurnAdvancesToRiver) {
   ASSERT_TRUE(next.pot_contributions == std::vector({3 + 15, 3 + 15}));
   ASSERT_EQ(next.current_bets[0], 0);
   ASSERT_EQ(next.current_bets[1], 0);
-  ASSERT_TRUE(next.IsChanceNode());  // river needs to be dealt
+  ASSERT_TRUE(next.IsChance());  // river needs to be dealt
 }
 
 TEST(TestStep, CallOnRiverMakesTerminal) {
@@ -245,7 +245,7 @@ TEST(TestStep, SecondCheckOnFlopAdvancesToTurn) {
   ASSERT_TRUE(state.pot_contributions == std::vector({3, 3}));
   ASSERT_EQ(state.current_bets[0], 0);
   ASSERT_EQ(state.current_bets[1], 0);
-  ASSERT_TRUE(state.IsChanceNode());  // turn needs to be dealt
+  ASSERT_TRUE(state.IsChance());  // turn needs to be dealt
 }
 
 TEST(TestStep, SecondCheckOnTurnAdvancesToRiver) {
@@ -263,7 +263,7 @@ TEST(TestStep, SecondCheckOnTurnAdvancesToRiver) {
   
   ASSERT_FALSE(state.is_terminal);
   ASSERT_EQ(state.street, Street::River);
-  ASSERT_TRUE(state.IsChanceNode());  // river needs to be dealt
+  ASSERT_TRUE(state.IsChance());  // river needs to be dealt
 }
 
 TEST(TestStep, SecondCheckOnRiverMakesTerminal) {

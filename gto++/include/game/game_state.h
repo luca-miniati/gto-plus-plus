@@ -32,7 +32,7 @@ struct GameState {
   std::vector<Chips> pot_contributions;
   std::vector<int> history;
   bool operator==(const GameState& other) const;
-  bool IsChanceNode() const;
+  bool IsChance() const;
   static GameState InitialState(std::vector<Chips> pot_contributions,
       std::vector<Chips> starting_stacks, Cards flop);
 };

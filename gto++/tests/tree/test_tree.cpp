@@ -5,16 +5,16 @@
 #include "tree/tree.h"
 #include "utils/utils.h"
 
-int NumLeaves(Tree &t, NodePtr u) {
-  if (u->IsTerminal())
+int NumLeaves(Tree &t, NodeIdx u) {
+  if (t.IsTerminal(u))
     return 1;
   int ans = 0;
-  for (NodeIdx i : u->GetChildren())
-    ans += NumLeaves(t, t.GetNode(i));
+  for (int child_idx = 0; child_idx < t.NumChildren(u); ++child_idx)
+    ans += NumLeaves(t, t.Child(u, child_idx));
   return ans;
 }
 
-TEST(TestTree, TestBuildTrivialTree) {
+TEST(TestTree, TestTrivialTree) {
   // only action is check
   std::vector<Action> actions = {
     Action(ActionType::Check),
@@ -23,7 +23,7 @@ TEST(TestTree, TestBuildTrivialTree) {
   Cards flop = {Card("Jh"), Card("9h"), Card("2h")};
   auto a_abst = std::make_unique<FixedAbstraction>(std::move(actions));
   auto i_abst_tree = std::make_unique<CanonicalSuitAbstraction>();
-  auto i_abst= std::make_unique<CanonicalSuitAbstraction>();
+  auto i_abst = std::make_unique<CanonicalSuitAbstraction>();
 
   Tree t(
       /* pot_contributions  =*/ {20, 20},
@@ -34,23 +34,23 @@ TEST(TestTree, TestBuildTrivialTree) {
       /* flop               =*/ flop
       );
   t.Build();
-  NodePtr root = t.GetRoot();
+  NodeIdx root = t.Root();
 
   // one child state: p0 checks the flop
-  ASSERT_EQ(root->GetChildren().size(), 1);
-  NodePtr u = t.GetChild(root, 0);
+  ASSERT_EQ(t.NumChildren(root), 1);
+  NodeIdx u = t.Child(root, 0);
 
   // one child state: p1 checks back
-  ASSERT_EQ(u->GetChildren().size(), 1);
-  u = t.GetChild(u, 0);
+  ASSERT_EQ(t.NumChildren(u), 1);
+  NodeIdx v = t.Child(u, 0);
 
   // child states:
   // deal heart: {2h, 3h, ..., Ah} - {2h, 9h, Jh}: 10 states
   // deal non-heart: {2, 3, ..., A}: 13 states
-  ASSERT_EQ(u->GetChildren().size(), 10 + 13);
+  ASSERT_EQ(t.NumChildren(v), 10 + 13);
 
   // count up terminal states
-  int actual = NumLeaves(t, root);
+  int actual = NumLeaves(t, t.Root());
 
   // should be exactly the # of runouts under suit isomorphism
   std::unordered_set<PublicInfoKey> canonical_rivers;
@@ -71,4 +71,44 @@ TEST(TestTree, TestBuildTrivialTree) {
   int expected = canonical_rivers.size();
 
   ASSERT_EQ(expected, actual);
+}
+
+TEST(TestTree, TestSmallTree) {
+  // only action is check, bet, call, fold
+  std::vector<Action> actions = {
+    Action(ActionType::Check),
+    Action(ActionType::Bet, 10),
+    Action(ActionType::Call),
+    Action(ActionType::Fold),
+  };
+
+  Cards flop = {Card("Jh"), Card("9h"), Card("2h")};
+  auto a_abst = std::make_unique<FixedAbstraction>(std::move(actions));
+  auto i_abst_tree = std::make_unique<CanonicalSuitAbstraction>();
+  auto i_abst= std::make_unique<CanonicalSuitAbstraction>();
+
+  Tree t(
+      /* pot_contributions  =*/ {20, 20},
+      /* max_raises         =*/ 1,
+      /* starting_stacks    =*/ {80, 80},
+      /* action_abst        =*/ std::move(a_abst),
+      /* info_set_abst      =*/ std::move(i_abst_tree),
+      /* flop               =*/ flop
+      );
+  t.Build();
+  NodeIdx root = t.Root();
+
+  // 2 child states: p0 checks or bets the flop
+  ASSERT_EQ(t.NumChildren(root), 2);
+  NodeIdx u = t.Child(root, 0);  // take check line
+
+  // 2 child states: p1 checks back or bets
+  ASSERT_EQ(t.NumChildren(u), 2);
+  NodeIdx v0 = t.Child(u, 0);  // take check line
+  NodeIdx v1 = t.Child(u, 1);  // take bet line
+
+  // v0 is a chance node, 23 different turns can be dealt
+  ASSERT_EQ(t.NumChildren(v0), 23);
+  // 2 child states: p0 calls or folds
+  ASSERT_EQ(t.NumChildren(v1), 2);
 }

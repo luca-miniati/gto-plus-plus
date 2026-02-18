@@ -16,7 +16,7 @@ TEST(TestPublicInfoKey, TestSuitAbstraction) {
   cards = {Card("As"), Card("Kd"), Card("Jh")};
   key = abst.GetPublicInfoKey(cards, history);
   suits = 0b001'010'011;
-  ranks = 0b1010'1100'1101;
+  ranks = 0b1101'1100'1010;
   ASSERT_EQ(key >> 60, suits);
   ASSERT_EQ((key >> 40) & 0b1111'1111'1111, ranks);
   ASSERT_EQ(key, ((suits << 20) | ranks) << 40);
@@ -24,23 +24,23 @@ TEST(TestPublicInfoKey, TestSuitAbstraction) {
   cards = {Card("As"), Card("Kd"), Card("Jh"), Card("4c")};
   key = abst.GetPublicInfoKey(cards, history);
   suits = 0b001'010'011'100;
-  ranks = 0b1010'1100'1101'0011;
+  ranks = 0b1101'1100'1010'0011;
   ASSERT_EQ(key >> 60, suits);
   ASSERT_EQ((key >> 40) & 0b1111'1111'1111'1111, ranks);
   ASSERT_EQ(key, ((suits << 20) | ranks) << 40);
 
   cards = {Card("As"), Card("Kd"), Card("Jh"), Card("4h")};
   key = abst.GetPublicInfoKey(cards, history);
-  suits = 0b001'010'011'001;
-  ranks = 0b1010'1100'1101'0011;
+  suits = 0b001'010'011'011;
+  ranks = 0b1101'1100'1010'0011;
   ASSERT_EQ(key >> 60, suits);
   ASSERT_EQ((key >> 40) & 0b1111'1111'1111'1111, ranks);
   ASSERT_EQ(key, ((suits << 20) | ranks) << 40);
 
   cards = {Card("As"), Card("Kd"), Card("Jh"), Card("4s")};
   key = abst.GetPublicInfoKey(cards, history);
-  suits = 0b001'010'011'011;
-  ranks = 0b1010'1100'1101'0011;
+  suits = 0b001'010'011'001;
+  ranks = 0b1101'1100'1010'0011;
   ASSERT_EQ(key >> 60, suits);
   ASSERT_EQ((key >> 40) & 0b1111'1111'1111'1111, ranks);
   ASSERT_EQ(key, ((suits << 20) | ranks) << 40);
@@ -48,7 +48,7 @@ TEST(TestPublicInfoKey, TestSuitAbstraction) {
   cards = {Card("As"), Card("Kd"), Card("Jh"), Card("4d")};
   key = abst.GetPublicInfoKey(cards, history);
   suits = 0b001'010'011'010;
-  ranks = 0b1010'1100'1101'0011;
+  ranks = 0b1101'1100'1010'0011;
   ASSERT_EQ(key >> 60, suits);
   ASSERT_EQ((key >> 40) & 0b1111'1111'1111'1111, ranks);
   ASSERT_EQ(key, ((suits << 20) | ranks) << 40);
@@ -62,7 +62,7 @@ TEST(TestPrivateInfoKey, TestSuitAbstraction) {
   cards = {Card("Jc"), Card("Tc")};
   key = abst.GetPrivateInfoKey(board, cards);
   suits = 0b010'010;
-  ranks = 0b1001'1010;
+  ranks = 0b1010'1001;
   ASSERT_EQ(key >> 8, suits);
   ASSERT_EQ(key & 0b1111'1111, ranks);
   ASSERT_EQ(key, (suits << 8) | ranks);
@@ -71,7 +71,7 @@ TEST(TestPrivateInfoKey, TestSuitAbstraction) {
   cards = {Card("Jh"), Card("Th")};
   key = abst.GetPrivateInfoKey(board, cards);
   suits = 0b010'010;
-  ranks = 0b1001'1010;
+  ranks = 0b1010'1001;
   ASSERT_EQ(key >> 8, suits);
   ASSERT_EQ(key & 0b1111'1111, ranks);
   ASSERT_EQ(key, (suits << 8) | ranks);
@@ -80,7 +80,7 @@ TEST(TestPrivateInfoKey, TestSuitAbstraction) {
   cards = {Card("Js"), Card("Ts")};
   key = abst.GetPrivateInfoKey(board, cards);
   suits = 0b010'010;
-  ranks = 0b1001'1010;
+  ranks = 0b1010'1001;
   ASSERT_EQ(key >> 8, suits);
   ASSERT_EQ(key & 0b1111'1111, ranks);
   ASSERT_EQ(key, (suits << 8) | ranks);
@@ -89,7 +89,7 @@ TEST(TestPrivateInfoKey, TestSuitAbstraction) {
   cards = {Card("Jd"), Card("Td")};
   key = abst.GetPrivateInfoKey(board, cards);
   suits = 0b001'001;
-  ranks = 0b1001'1010;
+  ranks = 0b1010'1001;
   ASSERT_EQ(key >> 8, suits);
   ASSERT_EQ(key & 0b1111'1111, ranks);
   ASSERT_EQ(key, (suits << 8) | ranks);
@@ -124,7 +124,8 @@ TEST(TestPrivateInfoKey, TestGetAllPrivateInfoKeys) {
 
   // 1 d:
   //   diamond comes from {2d, 3d, ..., Jd}
-  //   non-diamond comes from {2, 3, ..., A} = 10 * 13
+  //   non-diamond comes from {2, 3, ..., A}
+  //   = 10 * 13
   int one_diamond = 0;
   for (PrivateInfoKey k : keys)
     if ((k >> 8) == 0b001'010 || (k >> 8) == 0b010'001)

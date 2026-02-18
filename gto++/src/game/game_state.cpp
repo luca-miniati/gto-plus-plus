@@ -47,7 +47,7 @@ std::size_t std::hash<GameState>::operator()(const GameState& s) const {
   return seed;
 }
 
-bool GameState::IsChanceNode() const {
+bool GameState::IsChance() const {
   switch (this->street) {
     case Street::Flop:
       return this->community_cards.size() < 3;
