@@ -25,7 +25,6 @@ int main() {
   auto i_abst_tree = std::make_unique<CanonicalSuitAbstraction>();
   auto i_abst= std::make_unique<CanonicalSuitAbstraction>();
 
-  std::cout << "sizeof(Node): " << sizeof(Node) << std::endl;
   Tree t(
       /* pot_contributions  =*/ {20, 20},
       /* max_raises         =*/ 1,
@@ -39,7 +38,7 @@ int main() {
   t.Build();
   auto end = std::chrono::high_resolution_clock::now();
   auto dur = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  std::cout << dur << std::endl;
+  std::cout << "elapsed: " << dur << std::endl;
   std::cout << "|t| = " << t.Size() << std::endl;
 
   // 2 child states: p0 checks or bets the flop

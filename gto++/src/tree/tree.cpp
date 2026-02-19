@@ -56,7 +56,7 @@ NodeIdx Tree::CreateNode(
 
 NodeIdx Tree::BuildSubtree(
     const GameState &state,
-    NodeMap &node_map
+    NodeAdjacency &adj
     ) {
   PublicInfoKey key = info_set_abst_->GetPublicInfoKey(
       state.community_cards,
@@ -85,7 +85,7 @@ NodeIdx Tree::BuildSubtree(
 
         // if it's not been built, build subtree
         if (!HasNode(next_key))
-          node_map[curr_idx].emplace_back(BuildSubtree(next_state, node_map));
+          adj[curr_idx].emplace_back(BuildSubtree(next_state, adj));
       }
     }
   } else {  // player node: player makes an action
@@ -96,7 +96,7 @@ NodeIdx Tree::BuildSubtree(
         GameState next_state = GameModel::Step(
             /* state      =*/ state,
             /* action     =*/ actions[action_idx],
-            /* action_idx =*/ node_map[curr_idx].size()
+            /* action_idx =*/ adj[curr_idx].size()
             );
 
         // lookup canonical key
@@ -107,7 +107,7 @@ NodeIdx Tree::BuildSubtree(
 
         // if it's not been built, build subtree
         if (!HasNode(next_key))
-          node_map[curr_idx].emplace_back(BuildSubtree(next_state, node_map));
+          adj[curr_idx].emplace_back(BuildSubtree(next_state, adj));
       }
     }
   }
@@ -115,22 +115,22 @@ NodeIdx Tree::BuildSubtree(
   return curr_idx;
 }
 
-void Tree::BuildEdges(NodeIdx idx, NodeMap &node_map) {
+void Tree::BuildEdges(NodeIdx idx, NodeAdjacency &adj) {
   if (nodes_[idx].IsTerminal())
     return;
 
   // we've build this node
-  assert(node_map.contains(idx));
+  assert(adj.contains(idx));
   // we haven't built edges yet
   assert(nodes_[idx].fst_child == SIZE_MAX);
 
   nodes_[idx].fst_child = edges_.size();
-  nodes_[idx].num_children = node_map[idx].size();
+  nodes_[idx].num_children = adj[idx].size();
 
-  for (NodeIdx child_idx : node_map[idx])
+  for (NodeIdx child_idx : adj[idx])
     edges_.emplace_back(child_idx);
-  for (NodeIdx child_idx : node_map[idx])
-    BuildEdges(child_idx, node_map);
+  for (NodeIdx child_idx : adj[idx])
+    BuildEdges(child_idx, adj);
 }
 
 void Tree::Build() {
@@ -141,9 +141,9 @@ void Tree::Build() {
   GameState state = GameState::InitialState(pot_contributions_,
       starting_stacks_, flop_);
 
-  NodeMap node_map;
-  root_idx_ = BuildSubtree(state, node_map);
-  BuildEdges(root_idx_, node_map);
+  NodeAdjacency adj;
+  root_idx_ = BuildSubtree(state, adj);
+  BuildEdges(root_idx_, adj);
 }
 
 std::size_t Tree::Size() const {

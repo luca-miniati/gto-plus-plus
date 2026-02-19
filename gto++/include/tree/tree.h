@@ -23,7 +23,7 @@ class Tree {
 
     NodeIdx BuildSubtree(
         const GameState &state,
-        NodeMap &node_map
+        NodeAdjacency &adj
         );
     NodeIdx CreateNode(
         const PublicInfoKey &key,
@@ -31,7 +31,7 @@ class Tree {
         );
     void BuildEdges(
         NodeIdx idx,
-        NodeMap &node_map
+        NodeAdjacency &adj
         );
   public:
     Tree(std::vector<Chips> pot_contributions, int max_raises,

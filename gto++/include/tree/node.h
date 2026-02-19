@@ -6,12 +6,12 @@
 #include "info_set/info_set_abstraction.h"
 #include "game/game_state.h"
 class Node;
-using NodePtr     = std::shared_ptr<Node>;
-using NodeIdx     = std::size_t;
-using EdgeIdx     = std::size_t;
-using NodeMap     = std::unordered_map<NodeIdx, std::vector<NodeIdx>>;
-using TerminalIdx = std::size_t;
-using Player      = uint8_t;
+using NodePtr       = std::shared_ptr<Node>;
+using NodeIdx       = std::size_t;
+using EdgeIdx       = std::size_t;
+using NodeAdjacency = std::unordered_map<NodeIdx, std::vector<NodeIdx>>;
+using TerminalIdx   = std::size_t;
+using Player        = uint8_t;
 
 struct Node {
   EdgeIdx fst_child;
