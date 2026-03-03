@@ -31,6 +31,9 @@ const PrivateInfoKey Tree::GetPrivateInfoKey(const Cards &community_cards,
   return info_set_abst_->GetPrivateInfoKey(community_cards, hole_cards);
 }
 
+TerminalIdx Tree::InitTerminalUtilityMatrix(const GameState& state) {
+}
+
 NodeIdx Tree::CreateNode(
     const PublicInfoKey &key,
     const GameState &state
@@ -38,7 +41,7 @@ NodeIdx Tree::CreateNode(
   NodeIdx idx = nodes_.size();
   idx_[key] = idx;
 
-  // TODO: compute terminal util matrix on terminal state
+  TerminalIdx terminal_idx = InitTerminalUtilityMatrix(state);
 
   // init an empty node
   // fields will get populated in BuildEdges
@@ -48,7 +51,7 @@ NodeIdx Tree::CreateNode(
       /* num_children                 =*/ 0,
       /* flags                        =*/ flags,
       /* current_player               =*/ state.current_player,
-      /* terminal_utility_matrix_idx  =*/ SIZE_MAX
+      /* terminal_utility_matrix_idx  =*/ terminal_idx
       );
 
   return idx;

@@ -31,6 +31,7 @@ add_library(gto++
     src/action/action.cpp
     src/action/fixed_abstraction.cpp
     src/action/per_street_abstraction.cpp
+    src/action/check_fold_abstraction.cpp
     src/game/game_state.cpp
     src/game/game_model.cpp
     src/solver/range.cpp
@@ -40,6 +41,7 @@ add_library(gto++
     src/tree/node.cpp
     src/tree/tree.cpp
     src/utils/utils.cpp
+    src/main.cpp
 )
 
 # Include directories

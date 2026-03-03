@@ -33,6 +33,7 @@ class Tree {
         NodeIdx idx,
         NodeAdjacency &adj
         );
+    TerminalIdx InitTerminalUtilityMatrix(const GameState &state);
   public:
     Tree(std::vector<Chips> pot_contributions, int max_raises,
         std::vector<Chips> starting_stacks,
