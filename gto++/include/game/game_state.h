@@ -3,15 +3,16 @@
 #include <vector>
 #include <stdexcept>
 #include "action/action.h"
-#include "game/game_state.h"
 #include "utils/utils.h"
 #include "phevaluator/phevaluator.h"
 using Chips = int;
 
-enum class Street { Flop, Turn, River };
+enum class Street { Preflop, Flop, Turn, River };
 
 inline Street NextStreet(Street s) {
   switch (s) {
+    case Street::Preflop:
+      return Street::Flop;
     case Street::Flop:
       return Street::Turn;
     case Street::Turn:
