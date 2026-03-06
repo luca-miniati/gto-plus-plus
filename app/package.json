@@ -1,0 +1,19 @@
+{
+  "name": "gto-plus-plus-app",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "vite build",
+    "start": "npm run build && electron electron/main.js"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.0",
+    "electron": "^26.0.0",
+    "typescript": "^5.2.2",
+    "vite": "^7.3.1"
+  },
+  "type": "module"
+}
