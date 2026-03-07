@@ -6,7 +6,7 @@
 
 class Solver {
   private:
-    Tree tree_;
+    // Tree tree_;
     Cards flop_;
     double CFR(NodePtr u,
         std::vector<int> history,

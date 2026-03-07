@@ -1,6 +1,7 @@
 #pragma once
 #include "info_set/info_set.h"
-using PublicInfoKey   = __uint128_t;
+#include "utils/uint128.h"
+using PublicInfoKey   = UInt128;
 using PrivateInfoKey  = uint16_t;
 
 /*
@@ -48,26 +49,3 @@ class InfoSetAbstraction {
     virtual std::vector<PrivateInfoKey> GetAllPrivateInfoKeys(
         const Cards &community_cards) const = 0;
 };
-
-inline std::string str2(PublicInfoKey x) {
-  if (x == 0) return "0";
-  std::string s;
-  while (x > 0) {
-    s += (x % 2) ? "1" : "0";
-    x /= 2;
-  }
-  std::reverse(s.begin(), s.end());
-  return s;
-}
-
-inline std::string str10(PublicInfoKey x) {
-  if (x == 0) return "0";
-  std::string s;
-  while (x > 0) {
-    s += std::to_string(int(x % 10));
-    x /= 10;
-  }
-  std::reverse(s.begin(), s.end());
-  return s;
-}
-

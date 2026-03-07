@@ -12,17 +12,17 @@ Solver::Solver(
     std::unique_ptr<ActionAbstraction> action_abst,
     std::unique_ptr<InfoSetAbstraction> info_set_abst,
     Cards flop)
-  : tree_(
-      std::move(pot_contributions), 
-      max_raises, 
-      std::move(starting_stacks), 
-      std::move(action_abst), 
-      std::move(info_set_abst), 
-      flop
-      ),
-    flop_(flop)
+  // : tree_(
+  //     std::move(pot_contributions), 
+  //     max_raises, 
+  //     std::move(starting_stacks), 
+  //     std::move(action_abst), 
+  //     std::move(info_set_abst), 
+  //     flop
+  //     ),
+  //   flop_(flop)
 {
-  tree_.Build();
+  // tree_.Build();
 }
 
 int randint(int lo, int hi) {

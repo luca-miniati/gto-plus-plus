@@ -3,15 +3,16 @@
 #include <vector>
 #include <random>
 #include <algorithm>
+#include <array>
 #include "phevaluator/phevaluator.h"
 using Card = phevaluator::Card;
 using Cards = std::vector<Card>;
 
-constexpr std::string SUITS = "cdhs";
-constexpr std::string RANKS = "23456789TJQKA";
+constexpr std::array<char, 4> SUITS = {'c','d','h','s'};
+constexpr std::array<char, 13> RANKS = {'2','3','4','5','6','7','8','9','T','J','Q','K','A'};
 
 inline void HashCombine(std::size_t& seed, std::size_t value) {
-    seed ^= value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+  seed ^= value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }
 
 inline const std::array<Card, 52> CARDS = {
@@ -29,7 +30,6 @@ inline const std::array<Card, 52> CARDS = {
   Card("Kc"), Card("Kd"), Card("Kh"), Card("Ks"),
   Card("Ac"), Card("Ad"), Card("Ah"), Card("As")
 };
-
 
 inline Cards MakeDeck() {
   Cards deck(52);;

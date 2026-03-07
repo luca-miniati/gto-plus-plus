@@ -21,16 +21,17 @@ file(GLOB_RECURSE TEST_SOURCES
 # -----------------------
 # Add test executables
 # -----------------------
+include(GoogleTest)
+
 foreach(test_src ${TEST_SOURCES})
     get_filename_component(test_name ${test_src} NAME_WE)
 
     add_executable(${test_name} ${test_src})
-
-    # Link to gto++ and gtest
     target_link_libraries(${test_name} PRIVATE gto++ gtest_main)
 
-    # Discover tests for ctest
-    include(GoogleTest)
-    gtest_discover_tests(${test_name})
+    # Use gtest_discover_tests with explicit CONFIGURATIONS and working directory
+    gtest_discover_tests(${test_name}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        CONFIGURATIONS Debug Release RelWithDebInfo
+    )
 endforeach()
-
