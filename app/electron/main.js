@@ -80,7 +80,7 @@ function createWindow() {
   })
 
   Menu.setApplicationMenu(null)
-  // win.webContents.openDevTools()
+  win.webContents.openDevTools()
   win.loadFile(path.join(__dirname, '../dist/index.html'))
 }
 

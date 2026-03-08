@@ -4,6 +4,7 @@
 #include <format>
 #include <unordered_set>
 #include <stack>
+#include <ranges>
 #include "tree/tree.h"
 #include "game/game_model.h"
 #include "utils/utils.h"
@@ -31,8 +32,82 @@ PrivateInfoKey Tree::GetPrivateInfoKey(const Cards &community_cards,
   return info_set_abst_->GetPrivateInfoKey(community_cards, hole_cards);
 }
 
-TerminalIdx Tree::InitTerminalUtilityMatrix(const GameState& state) {
-  return 1;
+TerminalIdx Tree::AllocTerminalUtilityMatrix(const GameState& state) {
+  const Cards& board = state.community_cards;
+
+  auto hands_by_key = info_set_abst_->GetHandsByPrivateInfoKey(board);
+
+  std::vector<PrivateInfoKey> keys;
+  keys.reserve(hands_by_key.size());
+  for (auto &[k,_] : hands_by_key) keys.push_back(k);
+  std::sort(keys.begin(), keys.end());
+
+  int n = keys.size();
+  TerminalUtilityMatrix T(n, n);
+  T.setZero();
+
+  Chips b0 = state.current_bets[0];
+  Chips b1 = state.current_bets[1];
+  Chips c0 = state.pot_contributions[0];
+  Chips c1 = state.pot_contributions[1];
+
+  // Fold terminals
+  if (b0 < b1 || b1 < b0) {
+    double util = (b0 < b1) ? -(c0 + b0) : (c1 + b1);
+    T.setConstant(util);
+    terminal_utility_matrices_.push_back(T);
+    return terminal_utility_matrices_.size() - 1;
+  }
+
+  // Precompute hand strengths
+  std::vector<std::vector<phevaluator::Rank>> strengths(n);
+
+  for (int i = 0; i < n; i++) {
+    const auto& hands = hands_by_key.at(keys[i]);
+    auto& s = strengths[i];
+    s.reserve(hands.size());
+
+    for (const Cards& h : hands) {
+      s.push_back(phevaluator::EvaluateCards(
+        h[0], h[1],
+        board[0], board[1], board[2],
+        board[3], board[4]));
+    }
+  }
+
+  // Pairwise comparison
+  for (int i = 0; i < n; i++) {
+    const auto& si = strengths[i];
+
+    for (int j = i; j < n; j++) {
+      const auto& sj = strengths[j];
+
+      double sum = 0;
+      int m = si.size() * sj.size();
+      if (i == j) m = si.size() * (si.size() - 1) / 2;
+
+      if (m == 0) continue;
+
+      if (i == j) {
+        for (size_t a = 0; a < si.size(); a++)
+          for (size_t b = a + 1; b < si.size(); b++)
+            if (si[a] < si[b]) sum += c1;
+            else if (si[b] < si[a]) sum -= c0;
+      }
+      else {
+        for (auto r0 : si)
+          for (auto r1 : sj)
+            if (r0 < r1) sum += c1;
+            else if (r1 < r0) sum -= c0;
+      }
+
+      T(i, j) = sum / m;
+      if (i != j) T(j, i) = -T(i, j);
+    }
+  }
+
+  terminal_utility_matrices_.push_back(T);
+  return terminal_utility_matrices_.size() - 1;
 }
 
 /*
@@ -106,6 +181,9 @@ struct Frame {
  * left-to-right order.
  */
 void Tree::BuildIterative() {
+  int x = 0;
+  std::unordered_set<PublicInfoKey> have;
+
   // visited: canonical PublicInfoKey -> NodeIdx
   // We need NodeIdx (not just bool) so that when the same canonical state
   // is reached via a different path we can reuse the existing subtree.
@@ -162,8 +240,19 @@ void Tree::BuildIterative() {
 
     if (state.is_terminal) {
       // No children; leave fst_child = kInvalidEdge, num_children = 0.
-      // Terminal utility is computed on-the-fly by the solver;
-      // InitTerminalUtilityMatrix is intentionally deferred.
+      BoardKey board_key = info_set_abst_->GetBoardKey(state.community_cards);
+
+      if (terminal_utility_matrix_indices_.contains(board_key))
+        nodes_[curr_idx].terminal_utility_matrix_idx = terminal_utility_matrix_indices_.at(key);
+      else {
+        // Allocate a terminal util matrix
+        std::cout << "Allocating terminal matrix\n";
+        TerminalIdx idx = AllocTerminalUtilityMatrix(state.community_cards);
+        std::cout << "Done terminal matrix\n";
+        nodes_[curr_idx].terminal_utility_matrix_idx = idx;
+        terminal_utility_matrix_indices_[key] = idx;
+      }
+
       continue;
     }
 
@@ -182,7 +271,7 @@ void Tree::BuildIterative() {
           GameState next = GameModel::Step(state, card);
           PublicInfoKey next_key = info_set_abst_->GetPublicInfoKey(
               next.community_cards, next.history);
-          if (!visited.count(next_key) && !seen.contains(next_key)) {
+          if (!visited.count(next_key) && !seen.count(next_key)) {
             seen.insert(next_key);
             successors.push_back(std::move(next));
           }
@@ -223,7 +312,7 @@ void Tree::BuildIterative() {
       dfs.push(Frame{
           std::move(successors[i]),
           curr_idx,
-          static_cast<EdgeIdx>(fst + i)   // the slot this child must fill
+          static_cast<EdgeIdx>(fst + i)  // the slot this child must fill
           });
     }
   }

@@ -14,8 +14,10 @@ enum class ActionType { Bet, Call, Check, Fold, Raise };
  */
 struct Action {
   ActionType type;
-  int amount = -1;
+  int amount;
   bool operator==(const Action& other) const;
+  Action(ActionType type, int amount);
+  explicit Action(ActionType type);
 };
 
 template<>

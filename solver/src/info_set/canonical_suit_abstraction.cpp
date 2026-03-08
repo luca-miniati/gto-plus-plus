@@ -51,8 +51,8 @@ namespace {
         sort3(tmp.data());
 
       if (std::lexicographical_compare(
-            tmp.begin(), tmp.begin()+n,
-            best.begin(), best.begin()+n))
+            tmp.begin(), tmp.begin() + n,
+            best.begin(), best.begin() + n))
         best = tmp;
     }
 
@@ -129,6 +129,21 @@ namespace {
 
 } // namespace
 
+BoardKey CanonicalSuitAbstraction::GetBoardKey(const Cards &community_cards) const {
+  Cards board = community_cards;
+  std::sort(board.begin(), board.end());
+  std::array<int, 5> canonical{};
+  int n = CanonicalizeCommunity(community_cards, canonical);
+
+  uint64_t suits = EncodeSuits(canonical.data(), n);
+  uint64_t ranks = EncodeRanks(canonical.data(), n);
+
+  PublicInfoKey key = suits;
+  key = (key << 20) | ranks;
+  key = (key << 40) | actions;
+  return key;
+}
+
 PublicInfoKey CanonicalSuitAbstraction::GetPublicInfoKey(
     const Cards &community_cards,
     const std::vector<int> &history) const {
@@ -171,21 +186,24 @@ PrivateInfoKey CanonicalSuitAbstraction::GetPrivateInfoKey(
   return (suits << 8) | ranks;
 }
 
-std::vector<PrivateInfoKey>
-CanonicalSuitAbstraction::GetAllPrivateInfoKeys(
-    const Cards &community_cards) const {
+std::map<PrivateInfoKey, std::vector<Cards>> CanonicalSuitAbstraction::GetHandsByPrivateInfoKey(
+    const Cards &community_cards) const
+{
+  std::map<PrivateInfoKey, std::vector<Cards>> ans;
 
-  std::unordered_set<PrivateInfoKey> keys;
-
-  for (Card c1 : CARDS)
-    for (Card c2 : CARDS)
-      if (c1 != c2 &&
+  for (Card c1 : CARDS) {
+    for (Card c2 : CARDS) {
+      if (c1 > c2 &&
           !std::ranges::contains(community_cards, c1) &&
-          !std::ranges::contains(community_cards, c2))
-        keys.insert(GetPrivateInfoKey(community_cards, {c1, c2}));
+          !std::ranges::contains(community_cards, c2)) {
+        PrivateInfoKey key = GetPrivateInfoKey(community_cards, {c1, c2});
+        if (ans.count(key))
+          ans[key].emplace_back(c1, c2);
+        else
+          ans[key] = {{c1, c2}};
+      }
+    }
+  }
 
-  std::vector<PrivateInfoKey> ans(keys.begin(), keys.end());
-  std::ranges::sort(ans);
   return ans;
 }
-

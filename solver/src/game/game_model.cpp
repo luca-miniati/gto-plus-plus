@@ -225,8 +225,9 @@ GameState GameModel::Step(const GameState &state, const Action &action,
  * Return the utility of a given game state.
  */
 double GameModel::GetUtility(const GameState &state,
-    const Cards &community_cards, const Cards &p0_cards,
-    const Cards &p1_cards) {
+                             const Cards &p0_cards,
+                             const Cards &p1_cards)
+{
   if (state.history.size() == 0)
       throw std::runtime_error("GameModel::GetUtility: called on state with empty history.");
   if (!state.is_terminal)
@@ -243,13 +244,13 @@ double GameModel::GetUtility(const GameState &state,
 
   Rank r0 = phevaluator::EvaluateCards(
       p0_cards[0], p0_cards[1],  // p0's hole cards
-      community_cards[0], community_cards[1], community_cards[2],
-      community_cards[3], community_cards[4]  // board
+      state.community_cards[0], state.community_cards[1], state.community_cards[2],
+      state.community_cards[3], state.community_cards[4]  // board
       );
   Rank r1 = phevaluator::EvaluateCards(
       p1_cards[0], p1_cards[1],  // p1's hole cards
-      community_cards[0], community_cards[1], community_cards[2],
-      community_cards[3], community_cards[4]  // board
+      state.community_cards[0], state.community_cards[1], state.community_cards[2],
+      state.community_cards[3], state.community_cards[4]  // board
       );
 
   if (r0 < r1)  // winning hand has smaller rank

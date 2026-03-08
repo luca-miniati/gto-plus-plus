@@ -16,6 +16,6 @@ class GameModel {
         const int action_idx);
     static GameState Step(const GameState &state, const Card &c);
     static double GetUtility(const GameState &state,
-        const Cards &community_cards, const Cards &p0_cards,
-        const Cards &p1_cards);
+                             const Cards &p0_cards,
+                             const Cards &p1_cards);
 };

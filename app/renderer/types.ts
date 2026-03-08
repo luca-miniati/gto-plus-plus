@@ -8,6 +8,12 @@ export interface RangeViewerProps {
   width?: number;
   height?: number;
 }
+export interface RangeSummaryProps {
+  range: Range;
+  strategy: Strategy;
+  width?: number;
+  height?: number;
+}
 
 export interface RangeFile {
   name: string;
@@ -29,4 +35,11 @@ export interface FileNode {
   name: string;
   path: string;
   orderKey: number;
+}
+
+export interface CardProps {
+  rank?: string;
+  suit?: string;
+  width?: number;
+  height?: number;
 }

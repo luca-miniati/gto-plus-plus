@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(gto++ LANGUAGES CXX)
 
+include(CTest)
+
 # Use C++23
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -40,7 +42,6 @@ add_library(gto++
     src/info_set/canonical_suit_abstraction.cpp
     src/tree/tree.cpp
     src/utils/utils.cpp
-    src/main.cpp
 )
 
 # Include directories
@@ -50,13 +51,21 @@ target_include_directories(gto++ PUBLIC
 )
 
 # Link libraries
-target_link_libraries(gto++ PRIVATE pheval7 Eigen3::Eigen)
+target_link_libraries(gto++ PUBLIC pheval7 Eigen3::Eigen)
+
+
+
+# Include directories
+target_include_directories(gto++ PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/phevaluator/include
+)
 
 # -----------------------
 # Add main executable
 # -----------------------
 add_executable(main src/main.cpp)
-target_link_libraries(main PRIVATE gto++)
+target_link_libraries(main PUBLIC gto++)
 
 # -----------------------
 # Enable testing

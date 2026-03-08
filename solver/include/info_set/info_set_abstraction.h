@@ -1,6 +1,8 @@
 #pragma once
+#include <map>
 #include "info_set/info_set.h"
 #include "utils/uint128.h"
+using BoardKey        = uint64_t;
 using PublicInfoKey   = UInt128;
 using PrivateInfoKey  = uint16_t;
 
@@ -40,12 +42,14 @@ class InfoSetAbstraction {
   public:
     virtual ~InfoSetAbstraction() = default;
 
+    virtual BoardKey GetBoardKey(const Cards &community_cards) const = 0;
+
     virtual PublicInfoKey GetPublicInfoKey(const Cards &community_cards,
         const std::vector<int> &history) const = 0;
 
     virtual PrivateInfoKey GetPrivateInfoKey(const Cards &community_cards,
         const std::vector<Card> &hole_cards) const = 0;
 
-    virtual std::vector<PrivateInfoKey> GetAllPrivateInfoKeys(
+    virtual std::map<PrivateInfoKey, std::vector<Cards>> GetHandsByPrivateInfoKey(
         const Cards &community_cards) const = 0;
 };

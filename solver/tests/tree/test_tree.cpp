@@ -88,15 +88,15 @@ TEST(TestTree, TestSmallTree) {
       /* pot_contributions  =*/{20, 20},
       /* starting_stacks    =*/{80, 80},
       /* flop               =*/flop);
-  auto a_abst = std::make_unique<FixedAbstraction>(std::move(actions));
-  auto i_abst_tree = std::make_unique<CanonicalSuitAbstraction>();
-  auto i_abst= std::make_unique<CanonicalSuitAbstraction>();
+  auto action_abst = std::make_unique<FixedAbstraction>(std::move(actions));
+  auto info_set_abst_tree = std::make_unique<CanonicalSuitAbstraction>();
+  auto info_set_abst= std::make_unique<CanonicalSuitAbstraction>();
 
   Tree t(
       /* pot_contributions  =*/state,
       /* max_raises         =*/1,
-      /* action_abst        =*/std::move(a_abst),
-      /* info_set_abst      =*/std::move(i_abst_tree));
+      /* action_abst        =*/std::move(action_abst),
+      /* info_set_abst      =*/std::move(info_set_abst_tree));
   t.Build();
   NodeIdx root = t.Root();
 

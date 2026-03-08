@@ -5,6 +5,8 @@
 #include "info_set/info_set.h"
 #include "info_set/info_set_abstraction.h"
 #include "tree/node.h"
+#include <Eigen/Dense>
+using TerminalUtilityMatrix = Eigen::MatrixXd;
 
 class Tree {
   public:
@@ -51,7 +53,16 @@ class Tree {
      */
     NodeIdx root_idx_;
     std::vector<Node> nodes_;
+    // children of node u are stored in
+    // edges_[u.fst_child], edges_[u.fst_child + 1], ..., edges_[u.fst_child + u.num_children - 1]
     std::vector<NodeIdx> edges_;
+    // 
+    std::unordered_map<BoardKey, TerminalUtilityMatrix> showdown_matrices_;
+    // in a terminal node, for each pair of private info sets (i, j), T(i, j) is the average utility over all hands
+    // in each info set
+    std::vector<TerminalUtilityMatrix> terminal_utility_matrices_;
+    // cache terminal util matrices
+    std::unordered_map<PublicInfoKey, TerminalIdx> terminal_utility_matrix_indices_;
 
     /*
      * Allocate a node for `state` and append it to nodes_.
@@ -59,7 +70,7 @@ class Tree {
      */
     NodeIdx AllocNode(const GameState &state);
     void BuildIterative();
-    TerminalIdx InitTerminalUtilityMatrix(const GameState &state);
+    TerminalIdx AllocTerminalUtilityMatrix(const GameState &state);
 
     PublicInfoKey GetPublicInfoKey(
         const Cards &community_cards,

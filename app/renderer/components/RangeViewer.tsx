@@ -1,119 +1,64 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { RangeExplorer } from './RangeExplorer'
+import { RangeView } from './RangeView'
+import { Range, Strategy, TreeNode, FileNode } from '../types'
+import { RangeSummary } from './RangeSummary'
+import { Card } from './Card'
 
-import { hands, checkFoldColor, betColors } from './utils'
-import { Hand, Range, Strategy, RangeViewerProps } from '../types'
+export const RangeViewer: React.FC = () => {
+  const [tree, setTree] = useState<TreeNode[]>([])
+  const [selectedPath, setSelectedPath] = useState<string>()
+  const [range, setRange] = useState<Range | null>(null)
+  const [strategy, setStrategy] = useState<Strategy>()
 
-export const RangeViewer: React.FC<RangeViewerProps> = ({
-  range,
-  strategy,
-  width = 650,
-  height = 780,
-}) => {
-  const numCols = 13
-  const numRows = 13
+  useEffect(() => {
+    window.pokerAPI.getPreflopRangeTree().then((data) => {
+      setTree(data)
+    })
+  }, [])
 
-  const cellWidth = width / numCols
-  const cellHeight = height / numRows
+  const openRange = async (file: FileNode) => {
+    const data = await window.pokerAPI.loadPreflopRange(file.path)
 
-  let actionColors = {}
-  let numBets = 0
-  for (const action of strategy.keys()) {
-    if (action.includes('check') || action.includes('fold'))
-      actionColors[action] = checkFoldColor
-    else if (action.includes('call'))
-      actionColors[action] = callColor
-    else {
-      actionColors[action] = betColors[numBets]
-      numBets += 1
-    }
+    setSelectedPath(file.path)
+    setRange(new Map(Object.entries(data.range)))
+    setStrategy(new Map(
+      Object.entries(data.strategy).map(([k, v]) => [
+        k,
+        new Map(Object.entries(v as Record<string, number>))
+      ])
+    ))
   }
 
   return (
-    <div style={{
-      display: 'inline-grid',
-      gridTemplateColumns: `repeat(${numCols}, ${cellWidth}px)`,
-      gridTemplateRows: `repeat(${numRows}, ${cellHeight}px)`,
-      border: '0.25px solid #2d2d2d'
-    }}>
-      {hands.flat().map(hand => {
-        const weight = range.get(hand) || 0
-        let totalFreq = 0
-        for (const [a, s] of strategy)
-          totalFreq += weight * (s.get(hand) || 0)
-        const vFill = weight
-        let offset = 0
-
-        return (
-          <div
-            key={hand}
-            style={{
-              overflow: 'hidden',
-              width: cellWidth,
-              height: cellHeight,
-              border: '0.25px solid #2d2d2d',
-              boxSizing: 'border-box',
-              position: 'relative',
-              backgroundColor: '#252526',
-            }}
-          >
-          <div
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              width: '100%',
-              height: `${vFill * 100}%`,
-            }}
-            >
-            {strategy.keys().map((action, i) => {
-              const freq = strategy.get(action)?.get(hand) || 0
-              const freqPct = freq * 100
-
-              const div = (
-                <div
-                key={action}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: `${offset}%`,
-                  width: `${freqPct}%`,
-                  height: '100%',
-                  backgroundColor: actionColors[action],
-                }}
-                />
-              )
-
-              offset += freqPct
-              return div
-            })}
-            </div>
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                fontSize: Math.min(Number(cellWidth) * 0.35, Number(cellHeight) * 0.35),
-                padding: '0.3rem',
-                width: '100%',
-                height: '100%',
-                pointerEvents: 'none',
-                color: totalFreq > 0 ? '#fff' : '#555',
-                textShadow: totalFreq > 0
-                  ? `
-                  0 0 4px rgba(0,0,0,0.7),
-                  1px 1px 4px rgba(0,0,0,0.3),
-                  -1px 1px 4px rgba(0,0,0,0.3),
-                  1px -1px 4px rgba(0,0,0,0.3),
-                  -1px -1px 4px rgba(0,0,0,0.3)
-                  `
-                    : 'none',
-              }}
-              >
-              {hand}
-            </div>
+    <div style={{ display: 'flex', height: '100vh' }}>
+      <div style={{ flex: 1, padding: 20 }}>
+        {(range && strategy) ? (
+          <div>
+            <RangeView
+              range={range}
+              strategy={strategy}
+            />
+            <div style={{ height: 10 }}></div>
+            <RangeSummary
+              range={range}
+              strategy={strategy}
+            />
           </div>
-        )
-      })}
+        ) : (
+          <div style={{ color: '#888' }}>
+            Select a range
+          </div>
+        )}
+      </div>
+
+      <div style={{ padding: 20 }}>
+        <RangeExplorer
+          tree={tree}
+          selectedPath={selectedPath}
+          onOpen={openRange}
+        />
+      </div>
     </div>
   )
 }

@@ -101,11 +101,13 @@ TEST(TestPrivateInfoKey, TestGetAllPrivateInfoKeys) {
 
   board = {Card("Ad"), Card("Kd"), Card("Qd")};
 
-  std::vector<PrivateInfoKey> keys = abst.GetAllPrivateInfoKeys(board);
+  auto keys_to_hands = abst.GetHandsByPrivateInfoKey(board);
+
+  std::cout << keys_to_hands.size() << std::endl;
 
   // flushes: choose 2 of {2d, 3d, ..., Jd} = C(10, 2) = 45
   int flushes = 0;
-  for (PrivateInfoKey k : keys)
+  for (auto [k, h] : keys_to_hands)
     if ((k >> 8) == 0b001'001)
       ++flushes;
   ASSERT_EQ(flushes, 45);
@@ -115,7 +117,7 @@ TEST(TestPrivateInfoKey, TestGetAllPrivateInfoKeys) {
   //   1 combo of each offsuit (both not diamonds): C(13, 2) = 78
   //   1 combo of each suited (not diamonds): C(13, 2) = 78
   int zero_diamond = 0;
-  for (PrivateInfoKey k : keys)
+  for (auto [k, h] : keys_to_hands)
     if ((k >> 8) != 0b001'010 &&
         (k >> 8) != 0b010'001 &&
         (k >> 8) != 0b001'001)
@@ -127,10 +129,10 @@ TEST(TestPrivateInfoKey, TestGetAllPrivateInfoKeys) {
   //   non-diamond comes from {2, 3, ..., A}
   //   = 10 * 13
   int one_diamond = 0;
-  for (PrivateInfoKey k : keys)
+  for (auto [k, h] : keys_to_hands)
     if ((k >> 8) == 0b001'010 || (k >> 8) == 0b010'001)
       ++one_diamond;
   ASSERT_EQ(one_diamond, 130);
 
-  ASSERT_EQ(keys.size(), 45 + 13 + 78 + 78 + 130);
+  ASSERT_EQ(keys_to_hands.size(), 45 + 13 + 78 + 78 + 130);
 }
