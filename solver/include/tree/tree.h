@@ -56,7 +56,7 @@ class Tree {
     // children of node u are stored in
     // edges_[u.fst_child], edges_[u.fst_child + 1], ..., edges_[u.fst_child + u.num_children - 1]
     std::vector<NodeIdx> edges_;
-    // 
+    // for each board that 
     std::unordered_map<BoardKey, TerminalUtilityMatrix> showdown_matrices_;
     // in a terminal node, for each pair of private info sets (i, j), T(i, j) is the average utility over all hands
     // in each info set
