@@ -129,7 +129,7 @@ namespace {
 
 } // namespace
 
-BoardKey CanonicalSuitAbstraction::GetBoardKey(const Cards &community_cards) const {
+ShowdownKey CanonicalSuitAbstraction::GetShowdownKey(const Cards &community_cards) const {
   Cards board = community_cards;
   std::sort(board.begin(), board.end());
   std::array<int, 5> canonical{};
@@ -138,7 +138,7 @@ BoardKey CanonicalSuitAbstraction::GetBoardKey(const Cards &community_cards) con
   uint64_t suits = EncodeSuits(canonical.data(), n);
   uint64_t ranks = EncodeRanks(canonical.data(), n);
 
-  BoardKey key = suits;
+  ShowdownKey key = suits;
   key = (key << 20) | ranks;
   return key;
 }

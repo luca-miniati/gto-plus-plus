@@ -1,5 +1,6 @@
 compile_commands.json
 /build/
+/out/
 **/.ccls-cache/
 /Testing/
 **/.vscode/

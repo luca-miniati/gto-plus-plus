@@ -29,80 +29,80 @@ PrivateInfoKey Tree::GetPrivateInfoKey(const Cards &community_cards,
   return info_set_abst_->GetPrivateInfoKey(community_cards, hole_cards);
 }
 
-TerminalIdx Tree::AllocTerminalUtilityMatrix(const GameState& state) {
-  const Cards& board = state.community_cards;
-
-  auto hands_by_key = info_set_abst_->GetHandsByPrivateInfoKey(board);
+void Tree::AllocShowdownResultMatrix(
+    const GameState &state,
+    const std::map<PrivateInfoKey, std::vector<Cards>> &hands_by_key) {
 
   std::vector<PrivateInfoKey> keys;
   keys.reserve(hands_by_key.size());
-  for (auto &[k,_] : hands_by_key) keys.push_back(k);
+  for (auto &[k, _] : hands_by_key)
+    keys.push_back(k);
   std::sort(keys.begin(), keys.end());
 
   int n = keys.size();
-  TerminalUtilityMatrix T(n, n);
-  T.setZero();
+  Eigen::MatrixXd S(n, n);
+  S.setZero();
 
-  Chips b0 = state.current_bets[0];
-  Chips b1 = state.current_bets[1];
-  Chips c0 = state.pot_contributions[0];
-  Chips c1 = state.pot_contributions[1];
-
-  // Fold terminals
-  if (b0 < b1 || b1 < b0) {
-    double util = (b0 < b1) ? -(c0 + b0) : (c1 + b1);
-    T.setConstant(util);
-    terminal_utility_matrices_.push_back(T);
-    return terminal_utility_matrices_.size() - 1;
-  }
-
-  // Precompute hand strengths
-  std::vector<std::vector<phevaluator::Rank>> strengths(n);
-
-  for (int i = 0; i < n; i++) {
-    const auto& hands = hands_by_key.at(keys[i]);
-    auto& s = strengths[i];
-    s.reserve(hands.size());
-
-    for (const Cards& h : hands) {
-      s.push_back(phevaluator::EvaluateCards(
-        h[0], h[1],
-        board[0], board[1], board[2],
-        board[3], board[4]));
+  // Step 1: precompute hand strengths for each info set
+  std::vector<std::vector<phevaluator::Rank>> hand_strengths(n); // hand_strengths[i][h] = strength
+  for (int i = 0; i < n; ++i) {
+    const auto &hands = hands_by_key.at(keys[i]);
+    hand_strengths[i].reserve(hands.size());
+    for (const Cards &h : hands) {
+      hand_strengths[i].push_back(
+          phevaluator::EvaluateCards(
+              h[0],
+              h[1],
+              state.community_cards[0],
+              state.community_cards[1],
+              state.community_cards[2],
+              state.community_cards[3],
+              state.community_cards[4]));
     }
   }
 
-  // Pairwise comparison
-  for (int i = 0; i < n; i++) {
-    const auto& si = strengths[i];
+  // Step 2: compute matrix
+  for (int i = 0; i < n; ++i) {
+    for (int j = i; j < n; ++j) {
+      double sum = 0.0;
+      const auto &hi = hand_strengths[i];
+      const auto &hj = hand_strengths[j];
 
-    for (int j = i; j < n; j++) {
-      const auto& sj = strengths[j];
-
-      double sum = 0;
-      int m = si.size() * sj.size();
-      if (i == j) m = si.size() * (si.size() - 1) / 2;
-
-      if (m == 0) continue;
-
-      if (i == j) {
-        for (size_t a = 0; a < si.size(); a++)
-          for (size_t b = a + 1; b < si.size(); b++)
-            if (si[a] < si[b]) sum += c1;
-            else if (si[b] < si[a]) sum -= c0;
-      }
-      else {
-        for (auto r0 : si)
-          for (auto r1 : sj)
-            if (r0 < r1) sum += c1;
-            else if (r1 < r0) sum -= c0;
+      for (auto a : hi) {
+        for (auto b : hj) {
+          if (a > b)
+            sum += 1;
+          else if (a < b)
+            sum -= 1;
+          // tie: sum += 0
+        }
       }
 
-      T(i, j) = sum / m;
-      if (i != j) T(j, i) = -T(i, j);
+      double val = sum / (hi.size() * hj.size());
+      S(i, j) = val;
+      if (i != j)
+        S(j, i) = -val; // leverage anti-symmetry
     }
   }
 
+  // store in map
+  ShowdownKey key = info_set_abst_->GetShowdownKey(state.community_cards);
+  showdown_result_matrices_[key] = S;
+}
+
+TerminalIdx Tree::AllocTerminalUtilityMatrix(
+    const GameState &state,
+    const ShowdownKey &showdown_key,
+    const std::map<PrivateInfoKey, std::vector<Cards>> &hands_by_key) {
+  int n = hands_by_key.size();
+  Eigen::MatrixXd T(n, n);
+  Eigen::MatrixXd S = showdown_result_matrices_.at(showdown_key);
+
+  Chips half_of_pot_size = state.pot_contributions[0];
+
+  for (int i = 0; i < n; ++i)
+    for (int j = 0; j < n; ++j)
+      T(i, j) = S(i, j) * half_of_pot_size;
   terminal_utility_matrices_.push_back(T);
   return terminal_utility_matrices_.size() - 1;
 }
@@ -207,7 +207,7 @@ void Tree::BuildIterative() {
     const GameState &state = frame.state;
 
     // Compute canonical key for deduplication.
-    PublicInfoKey key = info_set_abst_->GetPublicInfoKey(
+    PublicInfoKey state_key = info_set_abst_->GetPublicInfoKey(
         state.community_cards,
         state.history
         );
@@ -215,14 +215,14 @@ void Tree::BuildIterative() {
     // If this canonical state has already been built, write the existing
     // node index into the parent's edge slot and skip expansion.
     // (This handles suit-isomorphic subtree sharing.)
-    if (visited.count(key)) {
+    if (visited.count(state_key)) {
       // The existing node's idx was already emitted when it was first
       // visited; we don't need to emit it again here.  However, for a
       // pure tree (no DAG sharing) this branch is never taken.
       // If you want DAG sharing, store key->NodeIdx and write it here.
       continue;
     }
-    visited.insert(key);
+    visited.insert(state_key);
 
     // Allocate the node.
     NodeIdx curr_idx = AllocNode(state);
@@ -236,20 +236,42 @@ void Tree::BuildIterative() {
     }
 
     if (state.is_terminal) {
-      // No children; leave fst_child = kInvalidEdge, num_children = 0.
-      BoardKey board_key = info_set_abst_->GetBoardKey(state.community_cards);
-
-      if (terminal_utility_matrix_indices_.contains(board_key))
-        nodes_[curr_idx].terminal_utility_matrix_idx = terminal_utility_matrix_indices_.at(key);
+      if (terminal_utility_matrix_indices_.count(state_key))
+        nodes_[curr_idx].terminal_utility_matrix_idx = terminal_utility_matrix_indices_.at(state_key);
       else {
-        // Allocate a terminal util matrix
-        std::cout << "Allocating terminal matrix\n";
-        TerminalIdx idx = AllocTerminalUtilityMatrix(state);
-        std::cout << "Done terminal matrix\n";
-        nodes_[curr_idx].terminal_utility_matrix_idx = idx;
-        terminal_utility_matrix_indices_[key] = idx;
+        auto hands_by_key = info_set_abst_->GetHandsByPrivateInfoKey(state.community_cards);
+
+        if (state.current_bets[0] != state.current_bets[1]) {
+          // If it's a fold terminal, we don't need to compute showdown results.
+          // Just allocate a terminal util matrix with the correct constant value.
+          Chips b0 = state.current_bets[0];
+          Chips b1 = state.current_bets[1];
+          Chips c0 = state.pot_contributions[0];
+          Chips c1 = state.pot_contributions[1];
+          double util = (b0 < b1) ? -(c0 + b0) : (c1 + b1);
+
+          int n = hands_by_key.size();
+          Eigen::MatrixXd T(n, n);
+          T.setConstant(util);
+
+          TerminalIdx idx = terminal_utility_matrices_.size();
+          terminal_utility_matrices_.push_back(T);
+          nodes_[curr_idx].terminal_utility_matrix_idx = idx;
+          terminal_utility_matrix_indices_[state_key] = idx;
+        } else {
+          ShowdownKey showdown_key = info_set_abst_->GetShowdownKey(state.community_cards);
+
+          if (!showdown_result_matrices_.count(showdown_key))
+            AllocShowdownResultMatrix(state, hands_by_key);
+
+          // Allocate a terminal util matrix
+          TerminalIdx idx = AllocTerminalUtilityMatrix(state, showdown_key, hands_by_key);
+          nodes_[curr_idx].terminal_utility_matrix_idx = idx;
+          terminal_utility_matrix_indices_[state_key] = idx;
+        }
       }
 
+      // No children; leave fst_child = kInvalidEdge, num_children = 0.
       continue;
     }
 

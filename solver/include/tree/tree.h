@@ -6,7 +6,6 @@
 #include "info_set/info_set_abstraction.h"
 #include "tree/node.h"
 #include <Eigen/Dense>
-using TerminalUtilityMatrix = Eigen::MatrixXd;
 
 class Tree {
   public:
@@ -56,11 +55,13 @@ class Tree {
     // children of node u are stored in
     // edges_[u.fst_child], edges_[u.fst_child + 1], ..., edges_[u.fst_child + u.num_children - 1]
     std::vector<NodeIdx> edges_;
-    // for each board that 
-    std::unordered_map<BoardKey, TerminalUtilityMatrix> showdown_matrices_;
+    // for each board that can happen at showdown, store the average of the function
+    // f(hand0, hand1) = 1 if hand0 wins, 0 if tie, -1 if hand1 wins
+    // over all pairs of hands in each info set. Indexed by showdown key.
+    std::unordered_map<ShowdownKey, Eigen::MatrixXd> showdown_result_matrices_;
     // in a terminal node, for each pair of private info sets (i, j), T(i, j) is the average utility over all hands
     // in each info set
-    std::vector<TerminalUtilityMatrix> terminal_utility_matrices_;
+    std::vector<Eigen::MatrixXd> terminal_utility_matrices_;
     // cache terminal util matrices
     std::unordered_map<PublicInfoKey, TerminalIdx> terminal_utility_matrix_indices_;
 
@@ -70,7 +71,15 @@ class Tree {
      */
     NodeIdx AllocNode(const GameState &state);
     void BuildIterative();
-    TerminalIdx AllocTerminalUtilityMatrix(const GameState &state);
+    TerminalIdx AllocTerminalUtilityMatrix(
+      const GameState &state,
+      const ShowdownKey &showdown_key,
+      const std::map<PrivateInfoKey, std::vector<Cards>> &hands_by_key
+    );
+    void AllocShowdownResultMatrix(
+      const GameState &state,
+      const std::map<PrivateInfoKey, std::vector<Cards>> &hands_by_key
+    );
 
     PublicInfoKey GetPublicInfoKey(
         const Cards &community_cards,
