@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include "tree/node.h"
 
 class Range {
   private:

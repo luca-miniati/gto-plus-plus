@@ -1,0 +1,16 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "gcc-14",
+            "hidden": false,
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "/usr/bin/gcc-14",
+                "CMAKE_CXX_COMPILER": "/usr/bin/g++-14",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        }
+    ]
+}

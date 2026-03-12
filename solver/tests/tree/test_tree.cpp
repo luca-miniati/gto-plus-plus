@@ -58,8 +58,8 @@ TEST(TestTree, TestTrivialTree) {
   for (Card c1 : CARDS) {
     for (Card c2 : CARDS) {
       if (c1 != c2 &&
-          !std::ranges::contains(flop, c1) &&
-          !std::ranges::contains(flop, c2)) {
+          !Contains(flop, c1) &&
+          !Contains(flop, c2)) {
         Cards cards = {flop[0], flop[1], flop[2], c1, c2};
         PublicInfoKey key = i_abst->GetPublicInfoKey(
             cards, 

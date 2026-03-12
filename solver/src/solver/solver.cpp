@@ -40,6 +40,7 @@ Card DealCard(Cards &deck) {
 
 double Solver::CFR(NodePtr u, std::vector<int> history, Cards community_cards,
     Cards p0_cards, Cards p1_cards, Cards deck, double p0, double p1) {
+  return 0;
   //
   // if (u->IsTerminal()) {
   //   return GameModel::GetUtility(

@@ -34,6 +34,24 @@ struct GameState {
   std::vector<int> history;
   bool operator==(const GameState& other) const;
   bool IsChance() const;
+  GameState(bool is_terminal,
+          int current_player,
+          int current_raises,
+          Street street,
+          Cards community_cards,
+          std::vector<Chips> current_stacks,
+          std::vector<Chips> current_bets,
+          std::vector<Chips> pot_contributions,
+          std::vector<int> history)
+    : is_terminal(is_terminal),
+      current_player(current_player),
+      current_raises(current_raises),
+      street(street),
+      community_cards(community_cards),
+      current_stacks(std::move(current_stacks)),
+      current_bets(std::move(current_bets)),
+      pot_contributions(std::move(pot_contributions)),
+      history(std::move(history)) {}
   static GameState InitialState(std::vector<Chips> pot_contributions,
       std::vector<Chips> starting_stacks, Cards flop);
 };

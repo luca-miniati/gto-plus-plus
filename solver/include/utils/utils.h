@@ -49,3 +49,7 @@ inline void ShuffleDeck(Cards &deck) {
   static std::mt19937 gen {rd()};
   std::ranges::shuffle(deck, gen);
 }
+
+inline bool Contains(const Cards& cards, const Card& card) {
+  return std::ranges::find(cards, card) != cards.end();
+}

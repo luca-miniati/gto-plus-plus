@@ -4,9 +4,12 @@ project(gto++ LANGUAGES CXX)
 include(CTest)
 
 # Use C++23
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD 20 CACHE STRING "" FORCE)
+
+message(STATUS "C++ compiler: ${CMAKE_CXX_COMPILER}")
 
 # -----------------------
 # Fetch Eigen 5.0.1
@@ -44,16 +47,8 @@ add_library(gto++
     src/utils/utils.cpp
 )
 
-# Include directories
-target_include_directories(gto++ PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/external/phevaluator/include
-)
-
 # Link libraries
 target_link_libraries(gto++ PUBLIC pheval7 Eigen3::Eigen)
-
-
 
 # Include directories
 target_include_directories(gto++ PUBLIC

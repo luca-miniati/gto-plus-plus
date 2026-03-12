@@ -6,7 +6,7 @@ cmake_policy(SET CMP0135 NEW)
 include(FetchContent)
 FetchContent_Declare(
   googletest
-  URL https://github.com/google/googletest/archive/32c3dce34bb0d3174a728ff8f9dbb51653b17e1e.zip
+  URL https://github.com/google/googletest/archive/refs/tags/v1.15.2.zip
 )
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)

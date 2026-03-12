@@ -1,10 +1,7 @@
-#include <stdexcept>
 #include <algorithm>
 #include <cassert>
-#include <format>
 #include <unordered_set>
 #include <stack>
-#include <ranges>
 #include "tree/tree.h"
 #include "game/game_model.h"
 #include "utils/utils.h"
@@ -247,7 +244,7 @@ void Tree::BuildIterative() {
       else {
         // Allocate a terminal util matrix
         std::cout << "Allocating terminal matrix\n";
-        TerminalIdx idx = AllocTerminalUtilityMatrix(state.community_cards);
+        TerminalIdx idx = AllocTerminalUtilityMatrix(state);
         std::cout << "Done terminal matrix\n";
         nodes_[curr_idx].terminal_utility_matrix_idx = idx;
         terminal_utility_matrix_indices_[key] = idx;
@@ -267,7 +264,7 @@ void Tree::BuildIterative() {
       // keep track of seen keys, to avoid overcounting isomorphic next states
       std::unordered_set<PublicInfoKey> seen;
       for (Card card : CARDS) {
-        if (!std::ranges::contains(state.community_cards, card)) {
+        if (!Contains(state.community_cards, card)) {
           GameState next = GameModel::Step(state, card);
           PublicInfoKey next_key = info_set_abst_->GetPublicInfoKey(
               next.community_cards, next.history);

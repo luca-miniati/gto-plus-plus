@@ -138,9 +138,8 @@ BoardKey CanonicalSuitAbstraction::GetBoardKey(const Cards &community_cards) con
   uint64_t suits = EncodeSuits(canonical.data(), n);
   uint64_t ranks = EncodeRanks(canonical.data(), n);
 
-  PublicInfoKey key = suits;
+  BoardKey key = suits;
   key = (key << 20) | ranks;
-  key = (key << 40) | actions;
   return key;
 }
 
@@ -194,8 +193,8 @@ std::map<PrivateInfoKey, std::vector<Cards>> CanonicalSuitAbstraction::GetHandsB
   for (Card c1 : CARDS) {
     for (Card c2 : CARDS) {
       if (c1 > c2 &&
-          !std::ranges::contains(community_cards, c1) &&
-          !std::ranges::contains(community_cards, c2)) {
+          !Contains(community_cards, c1) &&
+          !Contains(community_cards, c2)) {
         PrivateInfoKey key = GetPrivateInfoKey(community_cards, {c1, c2});
         if (ans.count(key))
           ans[key].emplace_back(c1, c2);

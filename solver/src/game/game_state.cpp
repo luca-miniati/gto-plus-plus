@@ -4,7 +4,7 @@
 
 GameState GameState::InitialState(std::vector<Chips> pot_contributions,
     std::vector<Chips> starting_stacks, Cards flop) {
-  return GameState(
+  return GameState{
     /*is_terminal         =*/ false,
     /*current_player      =*/ 0,
     /*current_raises      =*/ 0,
@@ -14,7 +14,7 @@ GameState GameState::InitialState(std::vector<Chips> pot_contributions,
     /*current_bets        =*/ {0, 0},
     /*pot_contributions   =*/ pot_contributions,
     /*history             =*/ {}
-  );
+  };
 }
 
 bool GameState::operator==(const GameState& other) const {

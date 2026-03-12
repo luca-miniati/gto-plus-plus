@@ -29,6 +29,7 @@ TEST(TestAction, TestConstructor) {
 
 TEST(TestActionAbstraction, TestFixedAbstraction) {
     auto abst = FixedAbstraction({CHECK, CALL, FOLD, B1});
-    ASSERT_EQ(abst.GetActions({}).size(), 4);
+    GameState state = GameState::InitialState({0, 0}, {100, 100}, {});
+    ASSERT_EQ(abst.GetActions(state).size(), 4);
 }
 
