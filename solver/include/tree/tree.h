@@ -30,12 +30,24 @@ class Tree {
     bool        IsTerminal(NodeIdx i) const   { return nodes_[i].IsTerminal(); }
     bool        IsChance(NodeIdx i) const     { return nodes_[i].IsChance();   }
     int         NumChildren(NodeIdx i) const  { return nodes_[i].num_children; }
+    int         CurrentPlayer(NodeIdx i) const { return nodes_[i].current_player; }
 
     /*
      * Return the NodeIdx of the i-th child of u (0-indexed)
      */
     NodeIdx Child(NodeIdx u, int i) const {
       return edges_[nodes_[u].fst_child + i];
+    }
+
+    // Expose terminal and showdown matrices for testing / solver use.
+    TerminalIdx TerminalMatrixIndex(NodeIdx i) const {
+      return nodes_[i].terminal_utility_matrix_idx;
+    }
+    const Eigen::MatrixXd &TerminalMatrix(TerminalIdx idx) const {
+      return terminal_utility_matrices_[idx];
+    }
+    const Eigen::MatrixXd &ShowdownMatrix(ShowdownKey key) const {
+      return showdown_result_matrices_.at(key);
     }
 
   private:

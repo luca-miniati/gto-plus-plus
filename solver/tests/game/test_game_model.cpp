@@ -367,7 +367,7 @@ TEST(TestStep, RaiseUpdatesStateCorrectly) {
   ASSERT_FALSE(state.is_terminal);
   ASSERT_EQ(state.current_player, 1);
   ASSERT_EQ(state.current_raises, 3);
-  ASSERT_TRUE(state.pot_contributions == std::vector({3, 3}));
+  ASSERT_EQ(state.pot_contributions, (std::array<Chips, 2>{3, 3}));
   ASSERT_EQ(state.current_bets[0], 40);
   ASSERT_EQ(state.current_bets[1], 20);
   ASSERT_EQ(state.current_stacks[0], 100 - 40);
@@ -386,7 +386,7 @@ TEST(TestStep, RaiseAfterRaiseIncrementsRaiseCount) {
   state = GameModel::Step(state, raise, 0);
   
   ASSERT_EQ(state.current_raises, 2);
-  ASSERT_TRUE(state.pot_contributions == std::vector({3, 3}));
+  ASSERT_EQ(state.pot_contributions, (std::array<Chips, 2>{3, 3}));
   ASSERT_EQ(state.current_bets[0], 3);
   ASSERT_EQ(state.current_bets[1], 12);
   ASSERT_EQ(state.current_stacks[0], 100 - 3);

@@ -18,19 +18,21 @@ GameState GameState::InitialState(std::array<Chips, 2> pot_contributions,
 }
 
 bool GameState::operator==(const GameState& other) const {
-  return this->current_player == other.current_player &&
-    this->current_raises      == other.current_raises &&
-    this->street              == other.street &&
-    this->community_cards     == other.community_cards &&
-    this->current_stacks      == other.current_stacks &&
-    this->current_bets        == other.current_bets &&
-    this->pot_contributions   == other.pot_contributions &&
-    this->history             == other.history;
+  return this->is_terminal     == other.is_terminal &&
+    this->current_player       == other.current_player &&
+    this->current_raises       == other.current_raises &&
+    this->street               == other.street &&
+    this->community_cards      == other.community_cards &&
+    this->current_stacks       == other.current_stacks &&
+    this->current_bets         == other.current_bets &&
+    this->pot_contributions    == other.pot_contributions &&
+    this->history              == other.history;
 }
 
 std::size_t std::hash<GameState>::operator()(const GameState& s) const {
   std::size_t seed = 0;
   std::hash<int> hasher;
+  HashCombine(seed, hasher(static_cast<int>(s.is_terminal)));
   HashCombine(seed, hasher(s.current_player));
   HashCombine(seed, hasher(s.current_raises));
   HashCombine(seed, hasher(static_cast<int>(s.street)));

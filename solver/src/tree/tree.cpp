@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <cassert>
-#include <unordered_set>
+#include <unordered_map>
 #include <stack>
 #include "tree/tree.h"
 #include "game/game_model.h"
@@ -18,6 +18,9 @@ Tree::Tree(GameState initial_state,
     // Pre-allocate to avoid repeated reallocation during Build().
     nodes_.reserve(1'000'000);
     edges_.reserve(1'000'000);
+    showdown_result_matrices_.reserve(1'000);
+    terminal_utility_matrices_.reserve(1'000);
+    terminal_utility_matrix_indices_.reserve(10'000);
 }
 
 PublicInfoKey Tree::GetPublicInfoKey(const Cards &community_cards,
@@ -202,17 +205,15 @@ struct Frame {
  * left-to-right order.
  */
 void Tree::BuildIterative() {
-  int x = 0;
-  std::unordered_set<PublicInfoKey> have;
-
   // visited: canonical PublicInfoKey -> NodeIdx
   // We need NodeIdx (not just bool) so that when the same canonical state
   // is reached via a different path we can reuse the existing subtree.
   // For a standard NLH subgame tree this doesn't happen (the tree is a
   // DAG only at chance nodes with suit-isomorphic runouts), but the
   // canonical abstraction CAN map two distinct raw game states to the
-  // same key. In that case we skip the duplicate.
-  std::unordered_set<PublicInfoKey> visited;
+  // same key. In that case we skip the duplicate and write the existing
+  // node index into the parent's edge slot.
+  std::unordered_map<PublicInfoKey, NodeIdx> visited;
   visited.reserve(1'000'000);
 
   std::stack<Frame> dfs;
@@ -239,17 +240,18 @@ void Tree::BuildIterative() {
     // If this canonical state has already been built, write the existing
     // node index into the parent's edge slot and skip expansion.
     // (This handles suit-isomorphic subtree sharing.)
-    if (visited.count(state_key)) {
-      // The existing node's idx was already emitted when it was first
-      // visited; we don't need to emit it again here.  However, for a
-      // pure tree (no DAG sharing) this branch is never taken.
-      // If you want DAG sharing, store key->NodeIdx and write it here.
+    auto it = visited.find(state_key);
+    if (it != visited.end()) {
+      NodeIdx existing_idx = it->second;
+      if (frame.edge_slot != static_cast<EdgeIdx>(SIZE_MAX)) {
+        edges_[frame.edge_slot] = existing_idx;
+      }
       continue;
     }
-    visited.insert(state_key);
 
     // Allocate the node.
     NodeIdx curr_idx = AllocNode(state);
+    visited[state_key] = curr_idx;
 
     // Write this node's index into the parent's edge slot.
     if (frame.edge_slot != static_cast<EdgeIdx>(SIZE_MAX)) {
@@ -308,16 +310,18 @@ void Tree::BuildIterative() {
       // Chance node: deal each possible next card.
 
       // keep track of seen keys, to avoid overcounting isomorphic next states
-      std::unordered_set<PublicInfoKey> seen;
+      std::vector<PublicInfoKey> seen;
       for (Card card : CARDS) {
         if (!Contains(state.community_cards, card)) {
           GameState next = GameModel::Step(state, card);
           PublicInfoKey next_key = info_set_abst_->GetPublicInfoKey(
               next.community_cards, next.history);
-          if (!visited.count(next_key) && !seen.count(next_key)) {
-            seen.insert(next_key);
-            successors.push_back(std::move(next));
-          }
+          if (visited.find(next_key) == visited.end()) {
+            if (std::find(seen.begin(), seen.end(), next_key) == seen.end()) {
+              seen.push_back(next_key);
+              successors.push_back(std::move(next));
+            }
+          } 
         }
       }
     } else {
@@ -329,7 +333,7 @@ void Tree::BuildIterative() {
           GameState next = GameModel::Step(state, action, action_idx);
           PublicInfoKey next_key = info_set_abst_->GetPublicInfoKey(
               next.community_cards, next.history);
-          if (!visited.count(next_key)) {
+          if (visited.find(next_key) == visited.end()) {
             successors.push_back(std::move(next));
           }
           ++action_idx;

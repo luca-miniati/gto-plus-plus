@@ -1,16 +1,25 @@
 #include <gtest/gtest.h>
 #include <unordered_set>
+#include <vector>
 #include "action/fixed_abstraction.h"
 #include "info_set/canonical_suit_abstraction.h"
 #include "tree/tree.h"
 #include "utils/utils.h"
 
-int NumLeaves(Tree &t, NodeIdx u) {
-  if (t.IsTerminal(u))
+// Count unique terminal nodes reachable from u. Uses memoization because the
+// tree is a DAG (shared nodes from canonical suit abstraction); without it,
+// traversal would re-visit shared subtrees exponentially and hang.
+static int NumLeaves(Tree& t, NodeIdx u, std::vector<int>& cache) {
+  if (cache[u] >= 0)
+    return cache[u];
+  if (t.IsTerminal(u)) {
+    cache[u] = 1;
     return 1;
+  }
   int ans = 0;
-  for (int child_idx = 0; child_idx < t.NumChildren(u); ++child_idx)
-    ans += NumLeaves(t, t.Child(u, child_idx));
+  for (int i = 0; i < t.NumChildren(u); ++i)
+    ans += NumLeaves(t, t.Child(u, i), cache);
+  cache[u] = ans;
   return ans;
 }
 
@@ -51,7 +60,8 @@ TEST(TestTree, TestTrivialTree) {
   ASSERT_EQ(t.NumChildren(v), 10 + 13);
 
   // count up terminal states
-  int actual = NumLeaves(t, t.Root());
+  std::vector<int> cache(t.Size(), -1);
+  int actual = NumLeaves(t, t.Root(), cache);
 
   // should be exactly the # of runouts under suit isomorphism
   std::unordered_set<PublicInfoKey> canonical_rivers;
@@ -113,4 +123,35 @@ TEST(TestTree, TestSmallTree) {
   ASSERT_EQ(t.NumChildren(v0), 23);
   // 2 child states: p0 calls or folds
   ASSERT_EQ(t.NumChildren(v1), 2);
+}
+
+TEST(TestTree, DeterministicBuild) {
+  std::vector<Action> actions = {
+      Action(ActionType::Check),
+      Action(ActionType::Bet, 10),
+      Action(ActionType::Call),
+      Action(ActionType::Fold),
+  };
+
+  Cards flop = {Card("Jh"), Card("9h"), Card("2h")};
+  GameState state = GameState::InitialState(
+      std::array<Chips, 2>{20, 20},
+      std::array<Chips, 2>{80, 80},
+      flop);
+  auto action_abst1 = std::make_unique<FixedAbstraction>(actions);
+  auto action_abst2 = std::make_unique<FixedAbstraction>(std::move(actions));
+  auto info_set_abst1 = std::make_unique<CanonicalSuitAbstraction>();
+  auto info_set_abst2 = std::make_unique<CanonicalSuitAbstraction>();
+
+  Tree t1(state, 1, std::move(action_abst1), std::move(info_set_abst1));
+  Tree t2(state, 1, std::move(action_abst2), std::move(info_set_abst2));
+  t1.Build();
+  t2.Build();
+
+  ASSERT_EQ(t1.Size(), t2.Size());
+
+  // Simple structural check: for the first few nodes, child counts agree.
+  for (NodeIdx i = 0; i < std::min<std::size_t>(t1.Size(), 32); ++i) {
+    ASSERT_EQ(t1.NumChildren(i), t2.NumChildren(i));
+  }
 }

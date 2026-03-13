@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 #include "game/game_state.h"
 #include "tree/tree.h"
 #include "info_set/canonical_suit_abstraction.h"
@@ -19,11 +20,15 @@ int main() {
   auto i_abst_tree = std::make_unique<CanonicalSuitAbstraction>();
   auto i_abst = std::make_unique<CanonicalSuitAbstraction>();
 
+  auto start = std::chrono::high_resolution_clock::now();
   Tree t(
       /* initial_state      =*/state,
       /* max_raises         =*/1,
       /* action_abst        =*/std::move(a_abst),
       /* info_set_abst      =*/std::move(i_abst_tree));
   t.Build();
+  auto end = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> elapsed = end - start;
+  std::cout << "Tree build time: " << elapsed.count() << "s, nodes=" << t.Size() << std::endl;
   NodeIdx root = t.Root();
 }
