@@ -2,6 +2,7 @@
 #include <functional>
 #include <vector>
 #include <stdexcept>
+#include <array>
 #include "action/action.h"
 #include "utils/utils.h"
 #include "phevaluator/phevaluator.h"
@@ -28,9 +29,9 @@ struct GameState {
   int current_raises;
   Street street;
   Cards community_cards;
-  std::vector<Chips> current_stacks;
-  std::vector<Chips> current_bets;
-  std::vector<Chips> pot_contributions;
+  std::array<Chips, 2> current_stacks;
+  std::array<Chips, 2> current_bets;
+  std::array<Chips, 2> pot_contributions;
   std::vector<int> history;
   bool operator==(const GameState& other) const;
   bool IsChance() const;
@@ -39,9 +40,9 @@ struct GameState {
           int current_raises,
           Street street,
           Cards community_cards,
-          std::vector<Chips> current_stacks,
-          std::vector<Chips> current_bets,
-          std::vector<Chips> pot_contributions,
+          std::array<Chips, 2> current_stacks,
+          std::array<Chips, 2> current_bets,
+          std::array<Chips, 2> pot_contributions,
           std::vector<int> history)
     : is_terminal(is_terminal),
       current_player(current_player),
@@ -52,8 +53,8 @@ struct GameState {
       current_bets(std::move(current_bets)),
       pot_contributions(std::move(pot_contributions)),
       history(std::move(history)) {}
-  static GameState InitialState(std::vector<Chips> pot_contributions,
-      std::vector<Chips> starting_stacks, Cards flop);
+  static GameState InitialState(std::array<Chips, 2> pot_contributions,
+      std::array<Chips, 2> starting_stacks, Cards flop);
 };
 
 template<>

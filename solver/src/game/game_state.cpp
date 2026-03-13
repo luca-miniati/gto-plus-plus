@@ -2,8 +2,8 @@
 #include "game/game_state.h"
 #include "utils/utils.h"
 
-GameState GameState::InitialState(std::vector<Chips> pot_contributions,
-    std::vector<Chips> starting_stacks, Cards flop) {
+GameState GameState::InitialState(std::array<Chips, 2> pot_contributions,
+    std::array<Chips, 2> starting_stacks, Cards flop) {
   return GameState{
     /*is_terminal         =*/ false,
     /*current_player      =*/ 0,

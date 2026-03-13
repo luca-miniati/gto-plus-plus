@@ -1,0 +1,5 @@
+if(EXISTS "/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests/test_game_model[1]_tests.cmake")
+  include("/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests/test_game_model[1]_tests.cmake")
+else()
+  add_test(test_game_model_NOT_BUILT test_game_model_NOT_BUILT)
+endif()

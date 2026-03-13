@@ -12,8 +12,8 @@ int main() {
 
   Cards flop = {Card("Jh"), Card("9h"), Card("2h")};
   GameState state = GameState::InitialState(
-      /* pot_contributions  =*/{20, 20},
-      /* starting_stacks    =*/{80, 80},
+      /* pot_contributions  =*/std::array<Chips, 2>{20, 20},
+      /* starting_stacks    =*/std::array<Chips, 2>{80, 80},
       /* flop               =*/flop);
   auto a_abst = std::make_unique<FixedAbstraction>(std::move(actions));
   auto i_abst_tree = std::make_unique<CanonicalSuitAbstraction>();

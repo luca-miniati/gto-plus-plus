@@ -62,14 +62,17 @@ void Tree::AllocShowdownResultMatrix(
   }
 
   // Step 2: compute matrix
+  // i < j
   for (int i = 0; i < n; ++i) {
-    for (int j = i; j < n; ++j) {
+    for (int j = i + 1; j < n; ++j) {
       double sum = 0.0;
       const auto &hi = hand_strengths[i];
       const auto &hj = hand_strengths[j];
 
-      for (auto a : hi) {
-        for (auto b : hj) {
+      for (int ii = 0; ii < hi.size(); ++ii) {
+        for (int jj = 0; jj < hj.size(); ++jj) {
+          phevaluator::Rank a = hi[ii];
+          phevaluator::Rank b = hj[jj];
           if (a > b)
             sum += 1;
           else if (a < b)
@@ -80,9 +83,30 @@ void Tree::AllocShowdownResultMatrix(
 
       double val = sum / (hi.size() * hj.size());
       S(i, j) = val;
-      if (i != j)
-        S(j, i) = -val; // leverage anti-symmetry
+      S(j, i) = -val;
     }
+  }
+
+  // i = j
+  for (int i = 0; i < n; ++i) {
+    double sum = 0.0;
+    const auto &h = hand_strengths[i];
+    if (h.size() <= 2)
+      continue; // if there are 2 or fewer hands in this info set, there are no pairs of distinct hands
+
+    for (int ii = 0; ii < h.size(); ++ii) {
+      for (int jj = ii + 1; jj < h.size(); ++jj) {
+        phevaluator::Rank a = h[ii];
+        phevaluator::Rank b = h[jj];
+        if (a > b)
+          sum += 1;
+        else if (a < b)
+          sum -= 1;
+      }
+    }
+
+    // divide by |h| choose 2, which is the number of pairs of hands from the same info set
+    S(i, i) = sum / (h.size() * (h.size() - 1) / 2);
   }
 
   // store in map

@@ -1,0 +1,1 @@
+/usr/bin/c++ -fsanitize=address -fno-omit-frame-pointer -g -g CMakeFiles/test_tree.dir/tree/test_tree.cpp.o -o test_tree  ../libgto++.a ../lib/libgtest_main.a ../external/phevaluator/libpheval7.a ../lib/libgtest.a 

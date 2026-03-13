@@ -130,7 +130,7 @@ GameState GameModel::Step(const GameState &state, const Action &action,
         next_stacks[actor] -= call_amount;
         next_pot_contributions[0] += next_bets[0];
         next_pot_contributions[1] += next_bets[1];
-        next_bets.assign(2, 0);
+        next_bets = {0, 0};
 
         bool is_river = state.street == Street::River;
 
@@ -154,7 +154,7 @@ GameState GameModel::Step(const GameState &state, const Action &action,
 
         if (opponent_has_checked) {
           // Both players checked, advance street
-          next_bets.assign(2, 0);
+          next_bets = {0, 0};
           bool is_river = state.street == Street::River;
 
           return GameState{

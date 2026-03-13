@@ -15,8 +15,8 @@ namespace {
 TEST(TestActionAbstraction, TestCheckFoldAbstraction) {
     auto abst = CheckFoldAbstraction();
     auto state = GameState::InitialState(
-        /* pot_contributions  =*/ {3, 3},
-        /* starting_stacks    =*/ {200, 200},
+        /* pot_contributions  =*/ std::array<Chips, 2>{3, 3},
+        /* starting_stacks    =*/ std::array<Chips, 2>{200, 200},
         /* flop               =*/ {Card("Ac"), Card("Ad"), Card("Ah")}
         );
     ASSERT_EQ(abst.GetActions(state).size(), 1);

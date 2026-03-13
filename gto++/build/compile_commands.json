@@ -1,0 +1,290 @@
+[
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/eigen-src -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -O3 -o CMakeFiles/gto++.dir/src/action/action.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/src/action/action.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/src/action/action.cpp",
+  "output": "CMakeFiles/gto++.dir/src/action/action.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/eigen-src -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -O3 -o CMakeFiles/gto++.dir/src/action/fixed_abstraction.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/src/action/fixed_abstraction.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/src/action/fixed_abstraction.cpp",
+  "output": "CMakeFiles/gto++.dir/src/action/fixed_abstraction.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/eigen-src -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -O3 -o CMakeFiles/gto++.dir/src/action/per_street_abstraction.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/src/action/per_street_abstraction.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/src/action/per_street_abstraction.cpp",
+  "output": "CMakeFiles/gto++.dir/src/action/per_street_abstraction.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/eigen-src -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -O3 -o CMakeFiles/gto++.dir/src/action/check_fold_abstraction.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/src/action/check_fold_abstraction.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/src/action/check_fold_abstraction.cpp",
+  "output": "CMakeFiles/gto++.dir/src/action/check_fold_abstraction.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/eigen-src -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -O3 -o CMakeFiles/gto++.dir/src/game/game_state.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/src/game/game_state.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/src/game/game_state.cpp",
+  "output": "CMakeFiles/gto++.dir/src/game/game_state.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/eigen-src -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -O3 -o CMakeFiles/gto++.dir/src/game/game_model.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/src/game/game_model.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/src/game/game_model.cpp",
+  "output": "CMakeFiles/gto++.dir/src/game/game_model.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/eigen-src -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -O3 -o CMakeFiles/gto++.dir/src/solver/range.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/src/solver/range.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/src/solver/range.cpp",
+  "output": "CMakeFiles/gto++.dir/src/solver/range.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/eigen-src -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -O3 -o CMakeFiles/gto++.dir/src/solver/solver.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/src/solver/solver.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/src/solver/solver.cpp",
+  "output": "CMakeFiles/gto++.dir/src/solver/solver.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/eigen-src -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -O3 -o CMakeFiles/gto++.dir/src/info_set/info_set.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/src/info_set/info_set.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/src/info_set/info_set.cpp",
+  "output": "CMakeFiles/gto++.dir/src/info_set/info_set.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/eigen-src -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -O3 -o CMakeFiles/gto++.dir/src/info_set/canonical_suit_abstraction.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/src/info_set/canonical_suit_abstraction.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/src/info_set/canonical_suit_abstraction.cpp",
+  "output": "CMakeFiles/gto++.dir/src/info_set/canonical_suit_abstraction.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/eigen-src -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -O3 -o CMakeFiles/gto++.dir/src/tree/node.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/src/tree/node.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/src/tree/node.cpp",
+  "output": "CMakeFiles/gto++.dir/src/tree/node.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/eigen-src -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -O3 -o CMakeFiles/gto++.dir/src/tree/tree.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/src/tree/tree.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/src/tree/tree.cpp",
+  "output": "CMakeFiles/gto++.dir/src/tree/tree.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/eigen-src -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -O3 -o CMakeFiles/gto++.dir/src/utils/utils.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/src/utils/utils.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/src/utils/utils.cpp",
+  "output": "CMakeFiles/gto++.dir/src/utils/utils.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/eigen-src -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -O3 -o CMakeFiles/gto++.dir/src/main.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/src/main.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/src/main.cpp",
+  "output": "CMakeFiles/gto++.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -o CMakeFiles/main.dir/src/main.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/src/main.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/src/main.cpp",
+  "output": "CMakeFiles/main.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval7.dir/src/dptables.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/dptables.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/dptables.c",
+  "output": "external/phevaluator/CMakeFiles/pheval7.dir/src/dptables.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval7.dir/src/tables_bitwise.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/tables_bitwise.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/tables_bitwise.c",
+  "output": "external/phevaluator/CMakeFiles/pheval7.dir/src/tables_bitwise.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval7.dir/src/evaluator7.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/evaluator7.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/evaluator7.c",
+  "output": "external/phevaluator/CMakeFiles/pheval7.dir/src/evaluator7.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -fsanitize=address -fno-omit-frame-pointer -g -O3 -DNDEBUG -std=gnu++11 -O3 -o CMakeFiles/pheval7.dir/src/evaluator7.cc.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/evaluator7.cc",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/evaluator7.cc",
+  "output": "external/phevaluator/CMakeFiles/pheval7.dir/src/evaluator7.cc.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval7.dir/src/hashtable7.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/hashtable7.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/hashtable7.c",
+  "output": "external/phevaluator/CMakeFiles/pheval7.dir/src/hashtable7.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval7.dir/src/hashtable.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/hashtable.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/hashtable.c",
+  "output": "external/phevaluator/CMakeFiles/pheval7.dir/src/hashtable.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval7.dir/src/hash.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/hash.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/hash.c",
+  "output": "external/phevaluator/CMakeFiles/pheval7.dir/src/hash.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -fsanitize=address -fno-omit-frame-pointer -g -O3 -DNDEBUG -std=gnu++11 -O3 -o CMakeFiles/pheval.dir/src/card_sampler.cc.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/card_sampler.cc",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/card_sampler.cc",
+  "output": "external/phevaluator/CMakeFiles/pheval.dir/src/card_sampler.cc.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval.dir/src/dptables.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/dptables.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/dptables.c",
+  "output": "external/phevaluator/CMakeFiles/pheval.dir/src/dptables.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -fsanitize=address -fno-omit-frame-pointer -g -O3 -DNDEBUG -std=gnu++11 -O3 -o CMakeFiles/pheval.dir/src/evaluator5.cc.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/evaluator5.cc",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/evaluator5.cc",
+  "output": "external/phevaluator/CMakeFiles/pheval.dir/src/evaluator5.cc.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval.dir/src/evaluator5.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/evaluator5.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/evaluator5.c",
+  "output": "external/phevaluator/CMakeFiles/pheval.dir/src/evaluator5.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -fsanitize=address -fno-omit-frame-pointer -g -O3 -DNDEBUG -std=gnu++11 -O3 -o CMakeFiles/pheval.dir/src/evaluator6.cc.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/evaluator6.cc",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/evaluator6.cc",
+  "output": "external/phevaluator/CMakeFiles/pheval.dir/src/evaluator6.cc.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval.dir/src/evaluator6.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/evaluator6.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/evaluator6.c",
+  "output": "external/phevaluator/CMakeFiles/pheval.dir/src/evaluator6.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -fsanitize=address -fno-omit-frame-pointer -g -O3 -DNDEBUG -std=gnu++11 -O3 -o CMakeFiles/pheval.dir/src/evaluator7.cc.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/evaluator7.cc",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/evaluator7.cc",
+  "output": "external/phevaluator/CMakeFiles/pheval.dir/src/evaluator7.cc.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval.dir/src/evaluator7.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/evaluator7.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/evaluator7.c",
+  "output": "external/phevaluator/CMakeFiles/pheval.dir/src/evaluator7.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval.dir/src/tables_bitwise.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/tables_bitwise.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/tables_bitwise.c",
+  "output": "external/phevaluator/CMakeFiles/pheval.dir/src/tables_bitwise.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval.dir/src/hash.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/hash.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/hash.c",
+  "output": "external/phevaluator/CMakeFiles/pheval.dir/src/hash.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval.dir/src/hashtable.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/hashtable.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/hashtable.c",
+  "output": "external/phevaluator/CMakeFiles/pheval.dir/src/hashtable.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval.dir/src/hashtable5.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/hashtable5.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/hashtable5.c",
+  "output": "external/phevaluator/CMakeFiles/pheval.dir/src/hashtable5.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval.dir/src/hashtable6.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/hashtable6.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/hashtable6.c",
+  "output": "external/phevaluator/CMakeFiles/pheval.dir/src/hashtable6.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval.dir/src/hashtable7.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/hashtable7.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/hashtable7.c",
+  "output": "external/phevaluator/CMakeFiles/pheval.dir/src/hashtable7.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval.dir/src/rank.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/rank.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/rank.c",
+  "output": "external/phevaluator/CMakeFiles/pheval.dir/src/rank.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/external/phevaluator",
+  "command": "/usr/bin/cc  -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -O3 -DNDEBUG -std=gnu99 -O3 -o CMakeFiles/pheval.dir/src/7462.c.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/7462.c",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/src/7462.c",
+  "output": "external/phevaluator/CMakeFiles/pheval.dir/src/7462.c.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest/include -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -o CMakeFiles/test_action.dir/action/test_action.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/tests/action/test_action.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/tests/action/test_action.cpp",
+  "output": "tests/CMakeFiles/test_action.dir/action/test_action.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest/include -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -o CMakeFiles/test_action_abstraction.dir/action/test_action_abstraction.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/tests/action/test_action_abstraction.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/tests/action/test_action_abstraction.cpp",
+  "output": "tests/CMakeFiles/test_action_abstraction.dir/action/test_action_abstraction.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest/include -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -o CMakeFiles/test_game_model.dir/game/test_game_model.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/tests/game/test_game_model.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/tests/game/test_game_model.cpp",
+  "output": "tests/CMakeFiles/test_game_model.dir/game/test_game_model.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest/include -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -o CMakeFiles/test_game_state.dir/game/test_game_state.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/tests/game/test_game_state.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/tests/game/test_game_state.cpp",
+  "output": "tests/CMakeFiles/test_game_state.dir/game/test_game_state.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest/include -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -o CMakeFiles/test_canonical_suit_abstraction.dir/info_set/test_canonical_suit_abstraction.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/tests/info_set/test_canonical_suit_abstraction.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/tests/info_set/test_canonical_suit_abstraction.cpp",
+  "output": "tests/CMakeFiles/test_canonical_suit_abstraction.dir/info_set/test_canonical_suit_abstraction.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/external/phevaluator/include -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest/include -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest -fsanitize=address -fno-omit-frame-pointer -g -g -std=gnu++23 -o CMakeFiles/test_tree.dir/tree/test_tree.cpp.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/tests/tree/test_tree.cpp",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/tests/tree/test_tree.cpp",
+  "output": "tests/CMakeFiles/test_tree.dir/tree/test_tree.cpp.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-build/googlemock",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googlemock/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googlemock -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest/include -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest -fsanitize=address -fno-omit-frame-pointer -g -g -std=c++23 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gmock.dir/src/gmock-all.cc.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googlemock/src/gmock-all.cc",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googlemock/src/gmock-all.cc",
+  "output": "_deps/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-build/googlemock",
+  "command": "/usr/bin/c++  -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googlemock/include -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googlemock -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest/include -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest -fsanitize=address -fno-omit-frame-pointer -g -g -std=c++23 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gmock_main.dir/src/gmock_main.cc.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googlemock/src/gmock_main.cc",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googlemock/src/gmock_main.cc",
+  "output": "_deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-build/googletest",
+  "command": "/usr/bin/c++  -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest/include -I/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest -fsanitize=address -fno-omit-frame-pointer -g -g -std=c++23 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gtest.dir/src/gtest-all.cc.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest/src/gtest-all.cc",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest/src/gtest-all.cc",
+  "output": "_deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o"
+},
+{
+  "directory": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-build/googletest",
+  "command": "/usr/bin/c++  -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest/include -isystem /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest -fsanitize=address -fno-omit-frame-pointer -g -g -std=c++23 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gtest_main.dir/src/gtest_main.cc.o -c /home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest/src/gtest_main.cc",
+  "file": "/home/luca-miniati/programming/gto-plus-plus/gto++/build/_deps/googletest-src/googletest/src/gtest_main.cc",
+  "output": "_deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o"
+}
+]

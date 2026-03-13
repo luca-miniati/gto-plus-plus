@@ -1,0 +1,5 @@
+add_test([=[TestTree.TestTrivialTree]=]  [==[/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests/test_tree]==] [==[--gtest_filter=TestTree.TestTrivialTree]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[TestTree.TestTrivialTree]=]  PROPERTIES WORKING_DIRECTORY [==[/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests]==] SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
+add_test([=[TestTree.TestSmallTree]=]  [==[/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests/test_tree]==] [==[--gtest_filter=TestTree.TestSmallTree]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[TestTree.TestSmallTree]=]  PROPERTIES WORKING_DIRECTORY [==[/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests]==] SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
+set(  test_tree_TESTS TestTree.TestTrivialTree TestTree.TestSmallTree)

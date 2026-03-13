@@ -11,7 +11,9 @@ namespace {
 TEST(TestIsLegal, BetIsLegalWhenNoBetExists) {
   Cards deck = MakeDeck();
   Cards flop = {Card("Jh"), Card("As"), Card("Kd")};
-  GameState state = GameState::InitialState({3, 3}, {100, 100}, flop);
+  GameState state = GameState::InitialState(std::array<Chips, 2>{3, 3},
+                                            std::array<Chips, 2>{100, 100},
+                                            flop);
 
   Action bet(ActionType::Bet, 10);
 
@@ -21,7 +23,9 @@ TEST(TestIsLegal, BetIsLegalWhenNoBetExists) {
 TEST(TestIsLegal, BetIllegalIfBetAlreadyExists) {
   Cards deck = MakeDeck();
   Cards flop = {Card("Jh"), Card("As"), Card("Kd")};
-  GameState state = GameState::InitialState({3, 3}, {100, 100}, flop);
+  GameState state = GameState::InitialState(std::array<Chips, 2>{3, 3},
+                                            std::array<Chips, 2>{100, 100},
+                                            flop);
   state.current_bets = {10, 0};
   state.current_player = 1;
   
@@ -33,7 +37,9 @@ TEST(TestIsLegal, BetIllegalIfBetAlreadyExists) {
 TEST(TestIsLegal, CheckLegalWhenNoBet) {
   Cards deck = MakeDeck();
   Cards flop = {Card("Jh"), Card("As"), Card("Kd")};
-  GameState state = GameState::InitialState({3, 3}, {100, 100}, flop);
+  GameState state = GameState::InitialState(std::array<Chips, 2>{3, 3},
+                                            std::array<Chips, 2>{100, 100},
+                                            flop);
   
   ASSERT_TRUE(GameModel::IsLegal(state, CHECK, 5));
 }
@@ -41,7 +47,9 @@ TEST(TestIsLegal, CheckLegalWhenNoBet) {
 TEST(TestIsLegal, CheckIllegalFacingBet) {
   Cards deck = MakeDeck();
   Cards flop = {Card("Jh"), Card("As"), Card("Kd")};
-  GameState state = GameState::InitialState({3, 3}, {100, 100}, flop);
+  GameState state = GameState::InitialState(std::array<Chips, 2>{3, 3},
+                                            std::array<Chips, 2>{100, 100},
+                                            flop);
   state.current_bets = {10, 0};
   state.current_stacks = {100 - 3 - 10, 100 - 3};
   state.current_player = 1;
@@ -52,7 +60,9 @@ TEST(TestIsLegal, CheckIllegalFacingBet) {
 TEST(TestIsLegal, CallLegalFacingBet) {
   Cards deck = MakeDeck();
   Cards flop = {Card("Jh"), Card("As"), Card("Kd")};
-  GameState state = GameState::InitialState({3, 3}, {100, 100}, flop);
+  GameState state = GameState::InitialState(std::array<Chips, 2>{3, 3},
+                                            std::array<Chips, 2>{100, 100},
+                                            flop);
   state.current_bets = {10, 0};
   state.current_stacks = {100 - 3 - 10, 100 - 3};
   state.current_player = 1;
@@ -63,7 +73,9 @@ TEST(TestIsLegal, CallLegalFacingBet) {
 TEST(TestIsLegal, CallIllegalIfNoBet) {
   Cards deck = MakeDeck();
   Cards flop = {Card("Jh"), Card("As"), Card("Kd")};
-  GameState state = GameState::InitialState({3, 3}, {100, 100}, flop);
+  GameState state = GameState::InitialState(std::array<Chips, 2>{3, 3},
+                                            std::array<Chips, 2>{100, 100},
+                                            flop);
   
   ASSERT_FALSE(GameModel::IsLegal(state, CALL, 5));
 }
@@ -71,7 +83,9 @@ TEST(TestIsLegal, CallIllegalIfNoBet) {
 TEST(TestIsLegal, RaiseLegalWithProperSize) {
   Cards deck = MakeDeck();
   Cards flop = {Card("Jh"), Card("As"), Card("Kd")};
-  GameState state = GameState::InitialState({3, 3}, {100, 100}, flop);
+  GameState state = GameState::InitialState(std::array<Chips, 2>{3, 3},
+                                            std::array<Chips, 2>{100, 100},
+                                            flop);
   state.current_bets = {10, 0};
   state.current_stacks = {100 - 3 - 10, 100 - 3};
   state.current_player = 1;
@@ -84,7 +98,9 @@ TEST(TestIsLegal, RaiseLegalWithProperSize) {
 TEST(TestIsLegal, RaiseIllegalIfTooSmall) {
   Cards deck = MakeDeck();
   Cards flop = {Card("Jh"), Card("As"), Card("Kd")};
-  GameState state = GameState::InitialState({3, 3}, {100, 100}, flop);
+  GameState state = GameState::InitialState(std::array<Chips, 2>{3, 3},
+                                            std::array<Chips, 2>{100, 100},
+                                            flop);
   state.current_bets = {10, 0};
   state.current_stacks = {100 - 3 - 10, 100 - 3};
   state.current_player = 1;
@@ -97,7 +113,9 @@ TEST(TestIsLegal, RaiseIllegalIfTooSmall) {
 TEST(TestIsLegal, RaiseIllegalIfNoBetExists) {
   Cards deck = MakeDeck();
   Cards flop = {Card("Jh"), Card("As"), Card("Kd")};
-  GameState state = GameState::InitialState({3, 3}, {100, 100}, flop);
+  GameState state = GameState::InitialState(std::array<Chips, 2>{3, 3},
+                                            std::array<Chips, 2>{100, 100},
+                                            flop);
   
   Action raise(ActionType::Raise, 10);
 
@@ -107,7 +125,9 @@ TEST(TestIsLegal, RaiseIllegalIfNoBetExists) {
 TEST(TestIsLegal, RaiseLegalIfAllin) {
   Cards deck = MakeDeck();
   Cards flop = {Card("Jh"), Card("As"), Card("Kd")};
-  GameState state = GameState::InitialState({3, 3}, {100, 100}, flop);
+  GameState state = GameState::InitialState(std::array<Chips, 2>{3, 3},
+                                            std::array<Chips, 2>{100, 100},
+                                            flop);
   state = GameModel::Step(state, Action(ActionType::Bet, 90), 0);
   Action raise(ActionType::Raise, 100);
   ASSERT_TRUE(GameModel::IsLegal(state, raise, 5));
@@ -116,7 +136,9 @@ TEST(TestIsLegal, RaiseLegalIfAllin) {
 TEST(TestStep, BetUpdatesStateCorrectly) {
   Cards deck = MakeDeck();
   Cards flop = {Card("Jh"), Card("As"), Card("Kd")};
-  GameState state = GameState::InitialState({3, 3}, {100, 100}, flop);
+  GameState state = GameState::InitialState(std::array<Chips, 2>{3, 3},
+                                            std::array<Chips, 2>{100, 100},
+                                            flop);
   Action bet(ActionType::Bet, 10);
   
   GameState next = GameModel::Step(state, bet, 0);
@@ -124,7 +146,8 @@ TEST(TestStep, BetUpdatesStateCorrectly) {
   ASSERT_FALSE(next.is_terminal);
   ASSERT_EQ(next.current_player, 1);  // Switches to opponent
   ASSERT_EQ(next.current_raises, 1);
-  ASSERT_TRUE(next.pot_contributions == std::vector({3, 3}));  // Pot doesn't change until bet is called
+  ASSERT_EQ(next.pot_contributions[0], 3);
+  ASSERT_EQ(next.pot_contributions[1], 3);  // Pot doesn't change until bet is called
   ASSERT_EQ(next.street, Street::Flop);
   ASSERT_EQ(next.current_bets[0], 10);
   ASSERT_EQ(next.current_bets[1], 0);
@@ -136,7 +159,9 @@ TEST(TestStep, BetUpdatesStateCorrectly) {
 TEST(TestStep, BetDecreasesActorStack) {
   Cards deck = MakeDeck();
   Cards flop = {Card("Jh"), Card("As"), Card("Kd")};
-  GameState state = GameState::InitialState({3, 3}, {100, 100}, flop);
+  GameState state = GameState::InitialState(std::array<Chips, 2>{3, 3},
+                                            std::array<Chips, 2>{100, 100},
+                                            flop);
   Action bet(ActionType::Bet, 25);
   
   GameState next = GameModel::Step(state, bet, 0);
@@ -157,7 +182,8 @@ TEST(TestStep, CallOnFlopAdvancesToTurn) {
   
   ASSERT_FALSE(next.is_terminal);
   ASSERT_EQ(next.street, Street::Turn);
-  ASSERT_TRUE(next.pot_contributions == std::vector({3 + 10, 3 + 10}));  // Original pot + call amount
+  ASSERT_EQ(next.pot_contributions[0], 3 + 10);
+  ASSERT_EQ(next.pot_contributions[1], 3 + 10);  // Original pot + call amount
   ASSERT_EQ(next.current_bets[0], 0);
   ASSERT_EQ(next.current_bets[1], 0);  // Bets reset
   ASSERT_EQ(next.current_stacks[0], 100 - 10);
@@ -179,7 +205,8 @@ TEST(TestStep, CallOnTurnAdvancesToRiver) {
   
   ASSERT_FALSE(next.is_terminal);
   ASSERT_EQ(next.street, Street::River);
-  ASSERT_TRUE(next.pot_contributions == std::vector({3 + 15, 3 + 15}));
+  ASSERT_EQ(next.pot_contributions[0], 3 + 15);
+  ASSERT_EQ(next.pot_contributions[1], 3 + 15);
   ASSERT_EQ(next.current_bets[0], 0);
   ASSERT_EQ(next.current_bets[1], 0);
   ASSERT_TRUE(next.IsChance());  // river needs to be dealt
@@ -198,7 +225,8 @@ TEST(TestStep, CallOnRiverMakesTerminal) {
   
   ASSERT_TRUE(next.is_terminal);
   ASSERT_EQ(next.street, Street::River);  // Street doesn't change
-  ASSERT_TRUE(next.pot_contributions == std::vector({3 + 20, 3 + 20}));
+  ASSERT_EQ(next.pot_contributions[0], 3 + 20);
+  ASSERT_EQ(next.pot_contributions[1], 3 + 20);
   ASSERT_EQ(next.current_bets[0], 0);
   ASSERT_EQ(next.current_bets[1], 0);
 }
@@ -212,7 +240,8 @@ TEST(TestStep, CallUpdatesStackCorrectly) {
   
   ASSERT_EQ(state.current_stacks[0], 100 - 20);
   ASSERT_EQ(state.current_stacks[1], 100 - 20);
-  ASSERT_TRUE(state.pot_contributions == std::vector({3 + 20, 3 + 20}));
+  ASSERT_EQ(state.pot_contributions[0], 3 + 20);
+  ASSERT_EQ(state.pot_contributions[1], 3 + 20);
 }
 
 TEST(TestStep, FirstCheckPassesToOpponent) {
@@ -225,7 +254,8 @@ TEST(TestStep, FirstCheckPassesToOpponent) {
   ASSERT_FALSE(next.is_terminal);
   ASSERT_EQ(next.current_player, 1);
   ASSERT_EQ(next.street, Street::Flop);  // Street doesn't advance
-  ASSERT_TRUE(next.pot_contributions == std::vector({3, 3}));
+  ASSERT_EQ(next.pot_contributions[0], 3);
+  ASSERT_EQ(next.pot_contributions[1], 3);
   ASSERT_EQ(next.current_bets[0], 0);
   ASSERT_EQ(next.current_bets[1], 0);
   ASSERT_EQ(next.community_cards.size(), 3);  // No new card
@@ -242,7 +272,8 @@ TEST(TestStep, SecondCheckOnFlopAdvancesToTurn) {
   
   ASSERT_FALSE(state.is_terminal);
   ASSERT_EQ(state.street, Street::Turn);
-  ASSERT_TRUE(state.pot_contributions == std::vector({3, 3}));
+  ASSERT_EQ(state.pot_contributions[0], 3);
+  ASSERT_EQ(state.pot_contributions[1], 3);
   ASSERT_EQ(state.current_bets[0], 0);
   ASSERT_EQ(state.current_bets[1], 0);
   ASSERT_TRUE(state.IsChance());  // turn needs to be dealt
@@ -298,7 +329,8 @@ TEST(TestStep, FoldMakesGameTerminal) {
   GameState next = GameModel::Step(state, FOLD, 0);
   
   ASSERT_TRUE(next.is_terminal);
-  ASSERT_TRUE(next.pot_contributions == std::vector({3, 3}));
+  ASSERT_EQ(next.pot_contributions[0], 3);
+  ASSERT_EQ(next.pot_contributions[1], 3);
   ASSERT_EQ(next.street, state.street);
   ASSERT_EQ(next.current_stacks[0], 77);
   ASSERT_EQ(next.current_stacks[1], 97);  // Stacks don't change
@@ -316,7 +348,8 @@ TEST(TestStep, RaiseUpdatesStateCorrectly) {
   ASSERT_FALSE(state.is_terminal);
   ASSERT_EQ(state.current_player, 0);
   ASSERT_EQ(state.current_raises, 2);
-  ASSERT_TRUE(state.pot_contributions == std::vector({3, 3}));
+  ASSERT_EQ(state.pot_contributions[0], 3);
+  ASSERT_EQ(state.pot_contributions[1], 3);
   ASSERT_EQ(state.current_bets[0], 10);
   ASSERT_EQ(state.current_bets[1], 20);
   ASSERT_EQ(state.current_stacks[0], 100 - 10);
