@@ -1,5 +1,0 @@
-if(EXISTS "/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests/test_canonical_suit_abstraction[1]_tests.cmake")
-  include("/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests/test_canonical_suit_abstraction[1]_tests.cmake")
-else()
-  add_test(test_canonical_suit_abstraction_NOT_BUILT test_canonical_suit_abstraction_NOT_BUILT)
-endif()

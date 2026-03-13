@@ -1,5 +1,0 @@
-add_test([=[TestAction.TestConstructor]=]  [==[/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests/test_action]==] [==[--gtest_filter=TestAction.TestConstructor]==] --gtest_also_run_disabled_tests)
-set_tests_properties([=[TestAction.TestConstructor]=]  PROPERTIES WORKING_DIRECTORY [==[/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests]==] SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
-add_test([=[TestActionAbstraction.TestFixedAbstraction]=]  [==[/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests/test_action]==] [==[--gtest_filter=TestActionAbstraction.TestFixedAbstraction]==] --gtest_also_run_disabled_tests)
-set_tests_properties([=[TestActionAbstraction.TestFixedAbstraction]=]  PROPERTIES WORKING_DIRECTORY [==[/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests]==] SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
-set(  test_action_TESTS TestAction.TestConstructor TestActionAbstraction.TestFixedAbstraction)

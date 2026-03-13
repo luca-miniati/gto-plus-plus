@@ -1,5 +1,0 @@
-if(EXISTS "/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests/test_action_abstraction[1]_tests.cmake")
-  include("/home/luca-miniati/programming/gto-plus-plus/gto++/build/tests/test_action_abstraction[1]_tests.cmake")
-else()
-  add_test(test_action_abstraction_NOT_BUILT test_action_abstraction_NOT_BUILT)
-endif()
